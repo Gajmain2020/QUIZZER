@@ -1,0 +1,74 @@
+.navbar {
+  margin-top: 0.5em;
+  display: flex;
+}
+
+.home-button {
+  margin: 0;
+  padding: 0;
+  width: 130px;
+  height: 80px;
+}
+
+.home-logo {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 130px;
+}
+
+.home-logo:hover {
+  outline: 0.5px solid rgb(107, 107, 107);
+}
+
+.navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 30px;
+}
+
+.navigation li {
+  display: inline;
+  margin: 0 10px;
+}
+
+.navigation-button:after {
+  background: none repeat scroll 0 0 transparent;
+  bottom: 0;
+  content: "";
+  display: block;
+  height: 2px;
+  left: 50%;
+  position: absolute;
+  background: #fff;
+  transition: width 0.3s ease 0s, left 0.3s ease 0s;
+  width: 0;
+}
+.navigation-button:hover:after {
+  width: 100%;
+  left: 0;
+}
+
+.toolbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login-signup {
+  width: 200px;
+  display: flex;
+  justify-content: space-around;
+}
+.nav-button {
+  width: 100px;
+}
+
+.drop-button {
+  width: 100px;
+}
+.drop-down {
+  margin-top: 5px;
+}

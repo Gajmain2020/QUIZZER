@@ -1,0 +1,37 @@
+.navigation-button {
+  margin: 10px 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.button {
+  align-items: center;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 10em;
+  margin: 10px 20px;
+  width: 28em;
+  cursor: pointer;
+  background-color: #393e46;
+  color: white;
+  -webkit-transition: background 500ms ease-in-out, color 500ms ease-in-out;
+  transition: background 500ms ease-in-out, color 500ms ease-in-out;
+  background-image: linear-gradient(45deg, transparent 50%, #392c2c 50%);
+  background-position: 25%;
+  background-size: 400%;
+}
+.button:hover {
+  background-position: 100%;
+}
+
+.navigation-logo {
+  width: 90px;
+  padding-bottom: 10px;
+}
+
+.grid-container {
+  width: 100%;
+}
