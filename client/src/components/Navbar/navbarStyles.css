@@ -62,6 +62,13 @@
   display: flex;
   justify-content: space-around;
 }
+
+.logged-in-navigation {
+  width: 400px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
 .nav-button {
   width: 100px;
 }
