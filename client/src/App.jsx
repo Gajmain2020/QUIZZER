@@ -19,7 +19,14 @@ class App extends Component {
         <div className="body-container">
           <Routes>
             <Route path="/" element={<Homepage />}></Route>
-            <Route path="/teacher" element={<TeacherLandingPage />} />
+            <Route path="/login">
+              <Route path="teacher" element={<div>login teacher page</div>} />
+              <Route path="student" element={<div>Login page student</div>} />
+            </Route>
+            <Route path="/signup">
+              <Route path="teacher" element={<div>Signup page teacher</div>} />
+              <Route path="student" element={<div>Signup page teacher</div>} />
+            </Route>
             <Route path="/student" element={<StudentLandingPage />} />
           </Routes>
         </div>

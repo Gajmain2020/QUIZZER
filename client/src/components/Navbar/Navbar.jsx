@@ -92,87 +92,89 @@ const Navbar = () => {
                   </Button>
                 </div>
               ) : (
-                <div className="login-signup">
-                  <div>
-                    <Button
-                      variant="contained"
-                      id="basic-button"
-                      aria-controls={open ? "basic-menu" : undefined}
-                      aria-haspopup="true"
-                      aria-expanded={open ? "true" : undefined}
-                      onClick={handleClick}
-                      className="nav-button"
-                    >
-                      Login
-                    </Button>
-                    <Menu
-                      className="drop-down"
-                      id="basic-menu"
-                      anchorEl={anchorEl}
-                      open={open}
-                      onClose={handleClose}
-                      MenuListProps={{
-                        "aria-labelledby": "basic-button",
-                      }}
-                    >
-                      <MenuItem
-                        onClick={handleClose}
+                <>
+                  <div className="login-signup">
+                    <div>
+                      <Button
+                        id="login-button"
+                        aria-controls={open ? "login-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? "true" : undefined}
+                        onClick={handleClick}
                         className="nav-button"
-                        component={Link}
-                        to="login/teacher"
+                        variant="contained"
                       >
-                        Teacher
-                      </MenuItem>
-                      <MenuItem
-                        onClick={handleClose}
-                        component={Link}
+                        Login
+                      </Button>
+                      <Menu
+                        id="login-menu"
+                        className="drop-down"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                          "aria-labelledby": "login-button",
+                        }}
+                      >
+                        <MenuItem
+                          onClick={handleClose}
+                          component={Link}
+                          to="/login/teacher"
+                          className="nav-button"
+                        >
+                          Teacher
+                        </MenuItem>
+                        <MenuItem
+                          onClick={handleClose}
+                          component={Link}
+                          className="nav-button"
+                          to="/login/student"
+                        >
+                          Student
+                        </MenuItem>
+                      </Menu>
+                    </div>
+                    <div>
+                      <Button
+                        id="signup-button"
+                        aria-controls={open ? "signup-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? "true" : undefined}
+                        onClick={handleClick}
                         className="nav-button"
-                        to="login/student"
                       >
-                        Student
-                      </MenuItem>
-                    </Menu>
+                        SignUp
+                      </Button>
+                      <Menu
+                        className="drop-down"
+                        id="signup-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                          "aria-labelledby": "signup-button",
+                        }}
+                      >
+                        <MenuItem
+                          onClick={handleClose}
+                          component={Link}
+                          className="nav-button"
+                          to="/signup/teacher"
+                        >
+                          Teacher
+                        </MenuItem>
+                        <MenuItem
+                          onClick={handleClose}
+                          component={Link}
+                          className="nav-button"
+                          to="/signup/student"
+                        >
+                          Student
+                        </MenuItem>
+                      </Menu>
+                    </div>
                   </div>
-                  <div>
-                    <Button
-                      id="basic-button"
-                      aria-controls={open ? "basic-menu" : undefined}
-                      aria-haspopup="true"
-                      aria-expanded={open ? "true" : undefined}
-                      onClick={handleClick}
-                      className="nav-button"
-                    >
-                      SignUp
-                    </Button>
-                    <Menu
-                      className="drop-down"
-                      id="basic-menu"
-                      anchorEl={anchorEl}
-                      open={open}
-                      onClose={handleClose}
-                      MenuListProps={{
-                        "aria-labelledby": "basic-button",
-                      }}
-                    >
-                      <MenuItem
-                        onClick={handleClose}
-                        component={Link}
-                        className="nav-button"
-                        to="signup/teacher"
-                      >
-                        Teacher
-                      </MenuItem>
-                      <MenuItem
-                        onClick={handleClose}
-                        component={Link}
-                        className="nav-button"
-                        to="signup/student"
-                      >
-                        Student
-                      </MenuItem>
-                    </Menu>
-                  </div>
-                </div>
+                </>
               )}
             </div>
           </div>
