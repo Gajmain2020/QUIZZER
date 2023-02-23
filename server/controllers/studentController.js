@@ -44,11 +44,9 @@ export async function signupStudent(req, res) {
       },
       "test",
       {
-        expiresIn: "1h",
+        expiresIn: "10s",
       }
     );
-
-    console.log(token);
 
     res
       .cookie("access_token", token, {
@@ -56,7 +54,7 @@ export async function signupStudent(req, res) {
         secure: true,
       })
       .status(200)
-      .json({ token });
+      .json({ token, id: result._id });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: "Something went wrong." });

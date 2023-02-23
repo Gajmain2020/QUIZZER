@@ -1,13 +1,10 @@
-//TODO
-// add Reset Button.
-// dispatch form data.
-// add user to backend
 import { useState } from "react";
 import { signupStudent } from "../../../service/UserService";
 
 import { Paper } from "@mui/material";
 
 import "./styles.css";
+import { useNavigate } from "react-router-dom";
 
 export default function SignupStudent() {
   const initialState = {
@@ -20,12 +17,13 @@ export default function SignupStudent() {
     department: "",
   };
 
+  const navigate = useNavigate();
+
   // const [returnMessage, setReturnMessage] = useState("");
 
   const [errorMessage, setErrorMessage] = useState("");
 
   const [studentSignupData, setStudentSignupData] = useState(initialState);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (studentSignupData.password !== studentSignupData.confirmPassword) {
@@ -38,11 +36,10 @@ export default function SignupStudent() {
     const token = await signupStudent(studentSignupData);
     localStorage.setItem(
       "token",
-      JSON.stringify({ token: token?.data?.token })
+      JSON.stringify({ token: token?.data?.token, id: token?.data?.id })
     );
-    // console.log(token);
-    // setStudentSignupData(initialState);
-    // e.target.reset();
+
+    navigate(`/student/homepage/${token.data.id}`);
   };
 
   function handleClear(e) {
