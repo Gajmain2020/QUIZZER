@@ -6,12 +6,12 @@ const reqString = {
 };
 
 const teacherSchema = mongoose.Schema({
-  name: reqString,
+  fullName: reqString,
   email: reqString,
   password: reqString,
   confirmPassword: reqString,
   department: reqString,
-  createdText: [String],
+  createdTest: [String],
 });
 
 var TeacherSchema = mongoose.model("TeacherSchema", teacherSchema);

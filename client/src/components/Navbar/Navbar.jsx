@@ -11,26 +11,35 @@ import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import appLogo from "../../images/appLogo.png";
+import CustomMenu from "./CustomMenu";
 
 import "./navbarStyles.css";
 
 const Navbar = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
 
   const handleClickProfile = (e) => {
     alert("profile button is clicked");
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const buttons = [
+    {
+      buttonText: "Login",
+      options: [
+        { path: "/login/teacher", optionText: "Teacher" },
+        { path: "/login/student", optionText: "Student" },
+      ],
+      variant: "contained",
+    },
+    {
+      buttonText: "Signup",
+      options: [
+        { path: "/signup/teacher", optionText: "Teacher" },
+        { path: "/signup/student", optionText: "Student" },
+      ],
+    },
+  ];
 
   return (
     <div>
@@ -94,85 +103,9 @@ const Navbar = () => {
               ) : (
                 <>
                   <div className="login-signup">
-                    <div>
-                      <Button
-                        id="login-button"
-                        aria-controls={open ? "login-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? "true" : undefined}
-                        onClick={handleClick}
-                        className="nav-button"
-                        variant="contained"
-                      >
-                        Login
-                      </Button>
-                      <Menu
-                        id="login-menu"
-                        className="drop-down"
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        MenuListProps={{
-                          "aria-labelledby": "login-button",
-                        }}
-                      >
-                        <MenuItem
-                          onClick={handleClose}
-                          component={Link}
-                          to="/login/teacher"
-                          className="nav-button"
-                        >
-                          Teacher
-                        </MenuItem>
-                        <MenuItem
-                          onClick={handleClose}
-                          component={Link}
-                          className="nav-button"
-                          to="/login/student"
-                        >
-                          Student
-                        </MenuItem>
-                      </Menu>
-                    </div>
-                    <div>
-                      <Button
-                        id="signup-button"
-                        aria-controls={open ? "signup-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? "true" : undefined}
-                        onClick={handleClick}
-                        className="nav-button"
-                      >
-                        SignUp
-                      </Button>
-                      <Menu
-                        className="drop-down"
-                        id="signup-menu"
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        MenuListProps={{
-                          "aria-labelledby": "signup-button",
-                        }}
-                      >
-                        <MenuItem
-                          onClick={handleClose}
-                          component={Link}
-                          className="nav-button"
-                          to="/signup/teacher"
-                        >
-                          Teacher
-                        </MenuItem>
-                        <MenuItem
-                          onClick={handleClose}
-                          component={Link}
-                          className="nav-button"
-                          to="/signup/student"
-                        >
-                          Student
-                        </MenuItem>
-                      </Menu>
-                    </div>
+                    {buttons.map((menu) => {
+                      return <CustomMenu key={menu.buttonText} menu={menu} />;
+                    })}
                   </div>
                 </>
               )}
