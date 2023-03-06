@@ -1,26 +1,20 @@
-import {
-  AppBar,
-  Toolbar,
-  Button,
-  Menu,
-  MenuItem,
-  Avatar,
-  Typography,
-} from "@mui/material";
+import { AppBar, Toolbar, Button, Avatar, Typography } from "@mui/material";
 import React from "react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import appLogo from "../../images/appLogo.png";
 import CustomMenu from "./CustomMenu";
 
 import "./navbarStyles.css";
 
 const Navbar = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("token"));
+  var userId = null;
+  if (user !== null) userId = user.id;
 
   const handleClickProfile = (e) => {
     alert("profile button is clicked");
+    navigate(`/student/dashboard/${userId}`);
   };
 
   const buttons = [
@@ -84,11 +78,11 @@ const Navbar = () => {
               </ul>
             </div>
             <div className="user-navigation">
-              {loggedIn ? (
+              {user !== null ? (
                 <div className="logged-in-navigation">
-                  <Avatar alt="user?.result.name">{user?.result.name}</Avatar>
+                  <Avatar alt="user?.result.name">Hello</Avatar>
                   <Button sx={{ color: "white" }} onClick={handleClickProfile}>
-                    <Typography variant="h6">{user?.result.name}</Typography>
+                    <Typography variant="h6">{user.userType}</Typography>
                   </Button>
 
                   <Button

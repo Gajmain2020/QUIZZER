@@ -19,7 +19,7 @@ function Component() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [user, setUser] = useState(null);
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -30,11 +30,8 @@ function Component() {
   useEffect(() => {
     if (localStorage.getItem("token") == null) {
       setIsLoading(false);
-      setLoggedInUser(false);
-      //is logged in false
+      setUser(null);
       setIsLoggedIn(false);
-      // redirect to login
-      navigate("/login");
     } else {
       axios({
         url: "http://localhost:5000/verify-jwt",
@@ -44,9 +41,9 @@ function Component() {
         if (res.data.verified === false) {
           localStorage.clear();
           setIsLoggedIn(false);
-          navigate("/login");
+          // navigate("/login");
         } else {
-          setLoggedInUser(res.data.details);
+          setUser(res.data);
         }
         setIsLoading(false);
       });
@@ -57,30 +54,35 @@ function Component() {
     return <>Loading</>;
   }
 
-  if (loggedInUser !== null) {
-  }
-
   return (
     <Container maxWidth="lg" className="mainContainer">
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="body-container">
         <Routes>
-          <Route path="/" element={<Homepage />}></Route>
-          <Route path="/login" element={<>helllo</>}>
-            <Route path="teacher" element={<div>login teacher page</div>} />
-            <Route path="student" element={<div>Login page student</div>} />
+          <Route path="/" exact element={<Homepage />}></Route>
+          <Route path="/login" exact element={<>helllo</>}>
+            <Route
+              path="teacher"
+              exact
+              element={<div>login teacher page</div>}
+            />
+            <Route
+              path="student"
+              exact
+              element={<div>Login page student</div>}
+            />
           </Route>
           <Route path="/signup">
-            <Route path="teacher" element={<SignupTeacher />} />
-            <Route path="student" element={<SignupStudent />} />
+            <Route path="teacher" exact element={<SignupTeacher />} />
+            <Route path="student" exact element={<SignupStudent />} />
           </Route>
           <Route path="/student">
-            <Route path="dashboard/:id" element={<StudentDashboard />} />
-            <Route path="homepage/:id" element={<StudentHomepage />} />
+            <Route path="dashboard/:id" exact element={<StudentDashboard />} />
+            <Route path="homepage/:id" exact element={<StudentHomepage />} />
           </Route>
         </Routes>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </Container>
   );
 }

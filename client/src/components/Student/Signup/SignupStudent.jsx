@@ -36,7 +36,11 @@ export default function SignupStudent() {
     const token = await signupStudent(studentSignupData);
     localStorage.setItem(
       "token",
-      JSON.stringify({ token: token?.data?.token, id: token?.data?.id })
+      JSON.stringify({
+        token: token?.data?.token,
+        id: token?.data?.id,
+        userType: token?.data?.userType,
+      })
     );
 
     navigate(`/student/homepage/${token.data.id}`);
@@ -145,7 +149,7 @@ export default function SignupStudent() {
               <option value="IT">IT</option>
               <option value="ETC">ETC</option>
               <option value="EEE">EEE</option>
-              <option value="CVIL">CVIL</option>
+              <option value="CIVIL">CIVIL</option>
               <option value="EE">EE</option>
             </select>
 

@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import StudentSchema from "../models/student.js";
 import jwt from "jsonwebtoken";
+import urlParser from "url-parser";
 
 export const homepage = async (req, res) => {
   res.send("Hello World! From Student Side");
@@ -44,7 +45,7 @@ export async function signupStudent(req, res) {
       },
       "test",
       {
-        expiresIn: "10s",
+        expiresIn: "1h",
       }
     );
 
@@ -54,9 +55,20 @@ export async function signupStudent(req, res) {
         secure: true,
       })
       .status(200)
-      .json({ token, id: result._id });
+      .json({ token, id: result._id, userType: "student" });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: "Something went wrong." });
+  }
+}
+
+export async function getStudentDetails(req, res) {
+  const { id } = req.params;
+  try {
+    const user = await StudentSchema.findById(id);
+    res.status(200).json({ user, found: true });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: "Student Does Not Exists", found: false });
   }
 }
