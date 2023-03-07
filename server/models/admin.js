@@ -1,17 +1,13 @@
 import mongoose from "mongoose";
 
-const reqString = {
-  type: String,
-  required: true,
-};
+const reqString = { type: String, required: true };
 
-const teacherSchema = mongoose.Schema({
+const adminSchema = mongoose.Schema({
   fullName: reqString,
   email: reqString,
   password: reqString,
   confirmPassword: reqString,
   department: reqString,
-  createdTest: [String],
   createdAt: {
     type: Date,
     default: new Date(),
@@ -22,5 +18,5 @@ const teacherSchema = mongoose.Schema({
   },
 });
 
-var TeacherSchema = mongoose.model("TeacherSchema", teacherSchema);
-export default TeacherSchema;
+var AdminSchema = mongoose.model("AdminSchema", adminSchema);
+export default AdminSchema;

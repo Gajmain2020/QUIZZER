@@ -1,5 +1,5 @@
 import { AppBar, Toolbar, Button, Avatar, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import appLogo from "../../images/appLogo.png";
 import CustomMenu from "./CustomMenu";
@@ -8,14 +8,20 @@ import "./navbarStyles.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("token"));
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("token")));
   var userId = null;
   if (user !== null) userId = user.id;
 
   const handleClickProfile = (e) => {
     alert("profile button is clicked");
-    navigate(`/student/dashboard/${userId}`);
+    navigate(`/${user.userType}/dashboard/${userId}`);
   };
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/");
+  }
 
   const buttons = [
     {
@@ -69,7 +75,7 @@ const Navbar = () => {
                   <Button
                     component={Link}
                     className="navigation-button"
-                    to="/admin"
+                    to="/login/admin"
                     sx={{ color: "#fff" }}
                   >
                     Admin
@@ -89,7 +95,7 @@ const Navbar = () => {
                     variant="contained"
                     className="logout"
                     color="secondary"
-                    // onClick={logout}
+                    onClick={handleLogout}
                   >
                     Logout
                   </Button>

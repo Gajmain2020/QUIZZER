@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 //  importing Routes for different APIs
 import studentRoutes from "./routes/student.js";
 import teacherRoutes from "./routes/teacher.js";
+import adminRoutes from "./routes/admin.js";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(cookieParser());
 
 app.use("/student", studentRoutes);
 app.use("/teacher", teacherRoutes);
+app.use("/admin", adminRoutes);
 
 app.post("/verify-jwt", (req, res) => {
   const token = req.body.token;

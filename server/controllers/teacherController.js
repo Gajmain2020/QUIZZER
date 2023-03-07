@@ -38,10 +38,26 @@ export const signupTeacher = async (req, res) => {
         expiresIn: "1h",
       }
     );
-    console.log(token);
-    return res.status(200).json({ token });
+    return res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        secure: true,
+      })
+      .status(200)
+      .json({ token, id: result._id, userType: "teacher" });
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export async function getTeacherDetails(req, res) {
+  const { id } = req.params;
+  try {
+    const user = await TeacherSchema.findById(id);
+    res.status(200).json({ user, found: true });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: "Teacher Does Not Exists", found: false });
+  }
+}

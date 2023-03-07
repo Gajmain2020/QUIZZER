@@ -2,8 +2,10 @@ import { useState } from "react";
 import { signupTeacher } from "../../../service/UserService";
 
 import { Paper } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function SignupTeacher() {
+  const navigate = useNavigate();
   const initialState = {
     fullName: "",
     email: "",
@@ -34,13 +36,14 @@ export default function SignupTeacher() {
     const token = await signupTeacher(teacherSignupData);
     localStorage.setItem(
       "token",
-      JSON.stringify({ token: token?.data?.token })
+      JSON.stringify({
+        token: token?.data?.token,
+        id: token?.data?.id,
+        userType: token?.data?.userType,
+      })
     );
 
-    setDisableSubmitButton(false);
-
-    // setStudentSignupData(initialState);
-    // e.target.reset();
+    navigate(`/teacher/homepage/${token.data.id}`);
   };
 
   function handleClear(e) {
