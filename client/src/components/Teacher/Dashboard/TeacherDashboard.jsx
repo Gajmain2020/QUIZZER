@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getTeacherDetails } from "../../../service/UserService";
+import { getTeacherDetails } from "../../../service/teacher";
 import Footer from "../../Footer/Footer";
 import Navbar from "../../Navbar/Navbar";
 

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginAdmin } from "../../service/admin";
 export default function AdminLogin() {
   const navigate = useNavigate();
   const initialState = {
     email: "",
     password: "",
-    error: "",
   };
   const [admin, setAdmin] = useState(initialState);
 
@@ -16,10 +16,25 @@ export default function AdminLogin() {
     alert("Signup clicked");
     navigate("/signup/admin");
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(admin);
-    alert(admin);
+    const token = await loginAdmin(admin);
+    // console.log(token.data.successful);
+    if (!token.data.successful) {
+      alert(token.data.message);
+      return;
+    }
+
+    localStorage.setItem(
+      "token",
+      JSON.stringify({
+        id: token?.data.id,
+        userType: token?.data?.userType,
+        token: token?.data?.token,
+        name: token?.data?.name,
+      })
+    );
+    navigate(`/${token.data.userType}/homepage/${token?.data?.id}`);
   };
 
   return (

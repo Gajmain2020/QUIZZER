@@ -44,7 +44,7 @@ export const signupTeacher = async (req, res) => {
         secure: true,
       })
       .status(200)
-      .json({ token, id: result._id, userType: "teacher" });
+      .json({ token, id: result._id, userType: "teacher", name: fullName });
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ message: "Internal Server Error" });

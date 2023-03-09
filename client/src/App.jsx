@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Container } from "@mui/material";
 
-import { Routes, Route, useNavigate, redirect } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import axios from "axios";
 import "./appStyles.css";
@@ -17,10 +17,9 @@ import NotFound from "./components/NotFound/NotFound";
 import AdminLogin from "./components/Admin/AdminLogin";
 import AdminSignup from "./components/Admin/AdminSignup";
 import AdminHomepage from "./components/Admin/AdminHomepage";
+import AdminDashboard from "./components/Admin/AdminDashboard";
 
 function Component() {
-  const navigate = useNavigate();
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [user, setUser] = useState(null);
@@ -64,9 +63,9 @@ function Component() {
       <div className="body-container">
         <Routes>
           <Route path="/" exact element={<Homepage />} />
-          <Route path="/admin" element={<AdminLogin />}>
+          <Route path="/admin">
             <Route path="homepage/:id" exact element={<AdminHomepage />} />
-            <Route path="dashboard/:id" exact element={<AdminHomepage />} />
+            <Route path="dashboard/:id" exact element={<AdminDashboard />} />
           </Route>
           <Route path="/login">
             <Route

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { signupStudent } from "../../../service/UserService";
+import { signupStudent } from "../../../service/student";
 
 import { Paper } from "@mui/material";
 
@@ -40,6 +40,7 @@ export default function SignupStudent() {
         token: token?.data?.token,
         id: token?.data?.id,
         userType: token?.data?.userType,
+        name: token?.data?.name,
       })
     );
 

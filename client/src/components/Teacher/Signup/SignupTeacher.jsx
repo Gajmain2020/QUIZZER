@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { signupTeacher } from "../../../service/UserService";
+import { signupTeacher } from "../../../service/teacher";
 
 import { Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -40,6 +40,7 @@ export default function SignupTeacher() {
         token: token?.data?.token,
         id: token?.data?.id,
         userType: token?.data?.userType,
+        name: token?.data?.name,
       })
     );
 

@@ -66,6 +66,7 @@
 .logged-in-navigation {
   width: 400px;
   display: flex;
+
   justify-content: space-evenly;
 }
 
@@ -78,4 +79,39 @@
 }
 .drop-down {
   margin-top: 5px;
+}
+
+.user-profile-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.admin-options-btn {
+  /* border: solid 10px red; */
+  margin: 16px 0;
+  display: flex;
+  gap: 16px;
+}
+
+.popup-form {
+  /* position: relative; */
+  width: 60%;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.popup-form-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+.popup-close-btn {
+  position: absolute;
+  width: 100%;
+  right: 0;
+  top: -10px;
 }

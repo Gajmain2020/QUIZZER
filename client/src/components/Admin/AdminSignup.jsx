@@ -23,7 +23,16 @@ export default function AdminSignup() {
     e.preventDefault();
     const token = await signupAdmin(admin);
     console.log(token);
-    navigate("/admin/dashboard");
+    localStorage.setItem(
+      "token",
+      JSON.stringify({
+        token: token?.data?.token,
+        id: token?.data?.id,
+        userType: token?.data?.userType,
+        name: token?.data?.name,
+      })
+    );
+    navigate(`/admin/homepage/${token.data.id}`);
   };
 
   return (

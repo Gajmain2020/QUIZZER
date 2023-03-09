@@ -55,7 +55,7 @@ export async function signupStudent(req, res) {
         secure: true,
       })
       .status(200)
-      .json({ token, id: result._id, userType: "student" });
+      .json({ token, id: result._id, userType: "student", name: fullName });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: "Something went wrong." });

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getStudentDetails } from "../../../service/UserService";
+import { getStudentDetails } from "../../../service/student";
 import Footer from "../../Footer/Footer";
 import Navbar from "../../Navbar/Navbar";
 

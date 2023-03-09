@@ -36,11 +36,65 @@ export const signupAdmin = async (req, res) => {
       confirmPassword: hashedPassword,
       department,
     });
-    console.log(result);
-    return res.status(200).json({ result });
+    const token = jwt.sign(
+      {
+        userType: "admin",
+        id: result._id,
+        name: fullName,
+      },
+      "test",
+      { expiresIn: "1h" }
+    );
+    return res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        secure: true,
+      })
+      .status(200)
+      .json({ token, id: result._id, userType: "admin", name: fullName });
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "error admin controller me hai check it asap" });
+    console.error(err.message);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+export const loginAdmin = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const result = await AdminSchema.findOne({ email });
+    if (!result) {
+      return res.status(400).json({ message: "User does not exist" });
+    }
+    const isPasswordValid = await bcrypt.compare(password, result.password);
+
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Password does not match" });
+    }
+
+    const token = jwt.sign(
+      {
+        userType: "admin",
+        id: result._id,
+        name: result.fullName,
+      },
+      "test",
+      { expiresIn: "1h" }
+    );
+    return res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        secure: true,
+      })
+      .status(200)
+      .json({
+        token,
+        id: result._id,
+        successful: true,
+        userType: "admin",
+        name: result.fullName,
+      });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
