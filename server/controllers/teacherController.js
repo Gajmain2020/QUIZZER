@@ -12,11 +12,14 @@ export const signupTeacher = async (req, res) => {
   try {
     const isUserExisting = await TeacherSchema.findOne({ email });
     if (isUserExisting)
-      return res.status(400).json({ message: "Email already exists." });
-    if (password !== confirmPassword)
       return res
         .status(400)
-        .json({ message: "Password and confirm password does not match." });
+        .json({ message: "Email already exists.", successful: false });
+    if (password !== confirmPassword)
+      return res.status(400).json({
+        message: "Password and confirm password does not match.",
+        successful: false,
+      });
 
     const hashPassword = await bcrypt.hash(password, 10);
 
@@ -44,20 +47,75 @@ export const signupTeacher = async (req, res) => {
         secure: true,
       })
       .status(200)
-      .json({ token, id: result._id, userType: "teacher", name: fullName });
+      .json({
+        token,
+        id: result._id,
+        userType: "teacher",
+        name: fullName,
+        successful: true,
+      });
   } catch (error) {
-    console.log(error.message);
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ errorMessage: error.message, successful: false });
   }
 };
+
+export async function loginTeacher(req, res) {
+  const { email, password } = req.body;
+  try {
+    const result = await TeacherSchema.findOne({ email });
+    if (!result) {
+      return res
+        .status(400)
+        .json({ message: "Invalid email or password", successful: false });
+    }
+    const isPasswordValid = await bcrypt.compare(password, result.password);
+
+    if (!isPasswordValid) {
+      return res
+        .status(400)
+        .json({ message: "Invalid email or password", successful: false });
+    }
+
+    const token = jwt.sign(
+      {
+        userType: "teacher",
+        id: result._id,
+        name: result.fullName,
+      },
+      "test",
+      { expiresIn: "1h" }
+    );
+    return res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        secure: true,
+      })
+      .status(200)
+      .json({
+        token,
+        id: result._id,
+        successful: true,
+        userType: "teacher",
+        name: result.fullName,
+      });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", successful: false });
+  }
+}
 
 export async function getTeacherDetails(req, res) {
   const { id } = req.params;
   try {
     const user = await TeacherSchema.findById(id);
-    res.status(200).json({ user, found: true });
+    return res.status(200).json({ user, found: true });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Teacher Does Not Exists", found: false });
+    return res
+      .status(500)
+      .json({ message: "Teacher Does Not Exists", successful: false });
   }
 }

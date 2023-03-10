@@ -2,15 +2,15 @@ import express from "express";
 
 //    importing CONTROLLERS
 import {
-  homepage,
   signupStudent,
+  loginStudent,
   getStudentDetails,
 } from "../controllers/studentController.js";
 
 const router = express.Router();
 
-router.get("/", homepage);
 router.post("/sign-up", signupStudent);
+router.post("/login", loginStudent);
 router.get("/get-student-details/:id", getStudentDetails);
 
 export default router;

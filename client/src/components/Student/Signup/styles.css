@@ -2,59 +2,34 @@
 
 .signup-form-container {
   align-items: center;
-  width: 75%;
+  width: 85%;
   display: flex;
   justify-content: center;
-  margin: 5em auto;
+  margin: 4em auto;
   padding: 1em;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 40em;
+  gap: 0.5em;
 }
 
 .form-item {
   font-family: "Fira Code";
-  height: 2.7em;
-  width: 20em;
+  height: 2em !important;
+  width: 100% !important;
+  outline-style: dotted;
   border: none;
-  padding: 8px 10px;
+  padding: 8px 0px;
 }
 .form-item:focus {
   border-radius: 10px;
   outline: 1px solid #555;
   box-shadow: 10px 5px 15px #4d4c4c;
   transition: 300ms;
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-}
-
-.submit-btn {
-  width: 150px;
-  height: 50px;
-  margin: 10px auto;
-  color: #fff;
-  font-size: 1.3em;
-  font-family: "Fira Code";
-  background-color: #1976d2;
-  border-radius: 15px;
-}
-
-.submit-btn:active {
-  transform: scale(1.1);
-  transition: 100ms;
-  box-shadow: 2px 2px 10px black;
-}
-
-.reset-btn {
-  background-color: #1976d2;
-  border-radius: 8px;
-  border-radius: 15px;
-  color: #fff;
-  font-family: "Fira Code";
-  height: 30px;
-  margin: 10px auto;
-  width: 120px;
 }
 
 .error-warning {
@@ -64,12 +39,27 @@
 }
 
 .form-heading {
-  font-size: 1.7em;
-  margin: 10px auto;
-  color: #1d3d31;
+  font-family: "ubuntu", "Fira code", "Lucida Sans", "Lucida Sans Regular",
+    "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  font-size: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #555;
+  font-weight: bold;
+  margin-top: 20px;
+  justify-content: center;
+  border-bottom: solid 2px rgb(129, 109, 255);
 }
 
 .dropdown {
-  width: inherit !important;
+  width: 100% !important;
   height: 3em !important;
+}
+
+.reset-btn {
+  background-color: #ffc107 !important;
+}
+.reset-btn:hover {
+  background-color: #e0a800 !important;
 }

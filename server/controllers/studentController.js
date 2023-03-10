@@ -1,11 +1,6 @@
 import bcrypt from "bcryptjs";
 import StudentSchema from "../models/student.js";
 import jwt from "jsonwebtoken";
-import urlParser from "url-parser";
-
-export const homepage = async (req, res) => {
-  res.send("Hello World! From Student Side");
-};
 
 export async function signupStudent(req, res) {
   const {
@@ -21,10 +16,14 @@ export async function signupStudent(req, res) {
   try {
     const isUserExisting = await StudentSchema.findOne({ email });
     if (isUserExisting)
-      res.status(400).json({ message: "Email elready exists." });
+      return res
+        .status(400)
+        .json({ message: "Email elready exists.", successful: false });
 
     if (password !== confirmPassword)
-      res.status(400).json({ message: "Password does not match." });
+      return res
+        .status(400)
+        .json({ message: "Password does not match.", successful: false });
 
     const hashPassword = await bcrypt.hash(password, 10);
 
@@ -49,16 +48,66 @@ export async function signupStudent(req, res) {
       }
     );
 
-    res
+    return res
       .cookie("access_token", token, {
         httpOnly: true,
         secure: true,
       })
       .status(200)
-      .json({ token, id: result._id, userType: "student", name: fullName });
+      .json({
+        token,
+        id: result._id,
+        userType: "student",
+        name: fullName,
+        successful: true,
+      });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+}
+
+export async function loginStudent(req, res) {
+  const { email, password } = req.body;
+  try {
+    const result = await StudentSchema.findOne({ email });
+    if (!result) {
+      return res
+        .status(400)
+        .json({ message: "Invalid email or password", successful: false });
+    }
+    const isPasswordValid = await bcrypt.compare(password, result.password);
+
+    if (!isPasswordValid) {
+      return res
+        .status(400)
+        .json({ message: "Invalid email or password", successful: false });
+    }
+
+    const token = jwt.sign(
+      {
+        userType: "student",
+        id: result._id,
+        name: result.fullName,
+      },
+      "test",
+      { expiresIn: "1h" }
+    );
+    return res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        secure: true,
+      })
+      .status(200)
+      .json({
+        token,
+        id: result._id,
+        successful: true,
+        userType: "student",
+        name: result.fullName,
+      });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Something went wrong." });
+    return res.status(500).json({ message: error.message, successful: false });
   }
 }
 
@@ -66,9 +115,8 @@ export async function getStudentDetails(req, res) {
   const { id } = req.params;
   try {
     const user = await StudentSchema.findById(id);
-    res.status(200).json({ user, found: true });
+    return res.status(200).json({ user, successful: true });
   } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ message: "Student Does Not Exists", found: false });
+    return res.status(500).json({ message: error.message, successful: false });
   }
 }

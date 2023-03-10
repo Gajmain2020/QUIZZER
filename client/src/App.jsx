@@ -18,6 +18,8 @@ import AdminLogin from "./components/Admin/AdminLogin";
 import AdminSignup from "./components/Admin/AdminSignup";
 import AdminHomepage from "./components/Admin/AdminHomepage";
 import AdminDashboard from "./components/Admin/AdminDashboard";
+import LoginStudent from "./components/Student/Login/LoginStudent";
+import LoginTeacher from "./components/Teacher/Login/LoginTeacher";
 
 function Component() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -68,16 +70,8 @@ function Component() {
             <Route path="dashboard/:id" exact element={<AdminDashboard />} />
           </Route>
           <Route path="/login">
-            <Route
-              path="teacher"
-              exact
-              element={<div>login teacher page</div>}
-            />
-            <Route
-              path="student"
-              exact
-              element={<div>Login page student</div>}
-            />
+            <Route path="teacher" exact element={<LoginTeacher />} />
+            <Route path="student" exact element={<LoginStudent />} />
             <Route path="admin" exact element={<AdminLogin />} />
           </Route>
           <Route path="/signup">

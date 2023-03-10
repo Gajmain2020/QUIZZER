@@ -15,15 +15,20 @@ export const signupAdmin = async (req, res) => {
   try {
     const isUserExisting = await AdminSchema.findOne({ email });
     if (isUserExisting) {
-      return res.status(400).json({ message: "User already exists" });
-    }
-    if (password !== confirmPassword) {
-      return res.status(400).json({ message: "Passwords do not match" });
-    }
-    if (password.length < 6) {
       return res
         .status(400)
-        .json({ message: "Password must be at least 6 characters" });
+        .json({ message: "User already exists", successful: false });
+    }
+    if (password !== confirmPassword) {
+      return res
+        .status(400)
+        .json({ message: "Passwords do not match", successful: false });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({
+        message: "Password must be at least 6 characters",
+        successful: false,
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -51,10 +56,16 @@ export const signupAdmin = async (req, res) => {
         secure: true,
       })
       .status(200)
-      .json({ token, id: result._id, userType: "admin", name: fullName });
+      .json({
+        token,
+        id: result._id,
+        userType: "admin",
+        name: fullName,
+        successful: true,
+      });
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ message: error.message, successful: false });
   }
 };
 
@@ -63,12 +74,16 @@ export const loginAdmin = async (req, res) => {
   try {
     const result = await AdminSchema.findOne({ email });
     if (!result) {
-      return res.status(400).json({ message: "User does not exist" });
+      return res
+        .status(400)
+        .json({ message: "Invalid email or password.", successful: false });
     }
     const isPasswordValid = await bcrypt.compare(password, result.password);
 
     if (!isPasswordValid) {
-      return res.status(400).json({ message: "Password does not match" });
+      return res
+        .status(400)
+        .json({ message: "Invalid email or password.", successful: false });
     }
 
     const token = jwt.sign(
@@ -95,6 +110,6 @@ export const loginAdmin = async (req, res) => {
       });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ message: error.message, successful: false });
   }
 };

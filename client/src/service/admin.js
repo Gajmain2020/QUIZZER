@@ -7,10 +7,9 @@ export async function signupAdmin(data) {
       method: "POST",
       data,
     });
-
-    return response;
+    return response.data;
   } catch (error) {
-    console.log(error.response.data.message);
+    return error.response.data;
   }
 }
 
@@ -21,10 +20,10 @@ export async function loginAdmin(data) {
       method: "POST",
       data,
     });
-    return response;
+
+    return response.data;
   } catch (error) {
-    console.log(error.response.data.message);
-    console.log(error.response.status);
+    return error.response.data;
   }
 }
 
@@ -35,9 +34,9 @@ export async function getAdminDetails(req, res) {
       method: "GET",
       data: req,
     });
-    return response;
+
+    return response.data;
   } catch (error) {
-    console.log(error.response.data.message);
-    console.log(error.response.status);
+    return error.response.data;
   }
 }

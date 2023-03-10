@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { signupStudent } from "../../../service/student";
 
-import { Paper } from "@mui/material";
+import { Alert, Button, CircularProgress, Paper } from "@mui/material";
 
 import "./styles.css";
+
+import signupLogo from "../../../images/sign-up.png";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../../Navbar/Navbar";
 
 export default function SignupStudent() {
   const initialState = {
@@ -20,31 +23,60 @@ export default function SignupStudent() {
   const navigate = useNavigate();
 
   // const [returnMessage, setReturnMessage] = useState("");
-
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [processing, setProcessing] = useState(false);
+
   const [studentSignupData, setStudentSignupData] = useState(initialState);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setProcessing(true);
+    if (
+      studentSignupData.fullName === "" ||
+      studentSignupData.email === "" ||
+      studentSignupData.password === "" ||
+      studentSignupData.confirmPassword === "" ||
+      studentSignupData.semester === "" ||
+      studentSignupData.section === "" ||
+      studentSignupData.department === ""
+    ) {
+      setErrorMessage("* Marked can not be empty.");
+      setProcessing(false);
+      return;
+    }
+    if (
+      studentSignupData.password.length < 8 ||
+      studentSignupData.password === ""
+    ) {
+      setErrorMessage("Password must contain 8 character.");
+      setProcessing(false);
+      return;
+    }
     if (studentSignupData.password !== studentSignupData.confirmPassword) {
       setErrorMessage("Password and Confirm Password must be same.");
+      setProcessing(false);
+      return;
     }
-    if (studentSignupData.password.length < 8) {
-      setErrorMessage("Password must contain 8 character.");
-    }
-
     const token = await signupStudent(studentSignupData);
+    if (!token.successful) {
+      setErrorMessage(token.message);
+      setProcessing(false);
+      return;
+    }
+    setProcessing(false);
+
     localStorage.setItem(
       "token",
       JSON.stringify({
-        token: token?.data?.token,
-        id: token?.data?.id,
-        userType: token?.data?.userType,
-        name: token?.data?.name,
+        token: token?.token,
+        id: token?.id,
+        userType: token?.userType,
+        name: token?.name,
       })
     );
 
-    navigate(`/student/homepage/${token.data.id}`);
+    navigate(`/student/homepage/${token.id}`);
   };
 
   function handleClear(e) {
@@ -58,56 +90,74 @@ export default function SignupStudent() {
       [e.target.name]: e.target.value,
     });
   };
+  function handleLoginClick() {
+    navigate(`/login/student`);
+  }
 
   return (
     <>
-      <Paper className="signup-form-container" elevation={6}>
-        <form
-          action="/student/sign-up"
-          method="post"
-          className="signup-form-items"
-        >
+      <Navbar />
+      <Paper
+        className="signup-form-container"
+        elevation={6}
+        sx={{ backgroundColor: "#E5D1FA" }}
+      >
+        <form>
           <div className="form-container">
-            <p className="form-heading">
-              <u>Sign-Up Student</u>
-            </p>
+            <div className="form-heading">
+              <img src={signupLogo} alt="SignUp Logo" width={60} /> Sign-Up
+              Student
+            </div>
+            {errorMessage !== "" && (
+              <Alert
+                severity="error"
+                onClose={() => {
+                  setErrorMessage("");
+                }}
+              >
+                {errorMessage}
+              </Alert>
+            )}
 
+            <label for="fullName">Full Name * </label>
             <input
+              id="fullName"
               className="form-item"
-              placeholder="Ex. Jone Doe"
+              placeholder="Ex. Jone Miller"
               required
               onChange={handleChange}
               name="fullName"
             />
+            <label htmlFor="email">Email *</label>
             <input
               className="form-item"
               placeholder="Ex. jone@mail.com"
               required
               onChange={handleChange}
               name="email"
+              id="email"
               label="Email"
             />
+            <label htmlFor="password">Password *</label>
             <input
               className="form-item"
               required
               placeholder="Password"
               name="password"
+              id="password"
               type="password"
-              label="Password"
               onChange={handleChange}
             />
+            <label htmlFor="confirmPassword">Confirm Password *</label>
             <input
               className="form-item"
               required
               name="confirmPassword"
+              id="confirmPassword"
               type="password"
               placeholder="Confirm Password"
-              label="Confirm Password"
               onChange={handleChange}
             />
-            {setErrorMessage !== "" && (
-              <p className="error-warning">{errorMessage}</p>
-            )}
 
             <select
               className="form-item dropdown"
@@ -133,7 +183,7 @@ export default function SignupStudent() {
               name="section"
               id="section"
             >
-              <option>Select Section</option>
+              <option>Select Section </option>
               <option value="A">A</option>
               <option value="B">B</option>
             </select>
@@ -155,12 +205,28 @@ export default function SignupStudent() {
             </select>
 
             <p className="error-warning">* marked are compulsory.</p>
-            <button className="submit-btn" onClick={handleSubmit}>
-              Sign - Up
-            </button>
-            <button className="reset-btn" onClick={handleClear} type="reset">
+            {!processing ? (
+              <Button variant="contained" size="large" onClick={handleSubmit}>
+                Sign - Up
+              </Button>
+            ) : (
+              <Button variant="contained" disabled>
+                <CircularProgress />
+              </Button>
+            )}
+            <Button
+              variant="contained"
+              size="small"
+              onClick={handleClear}
+              type="reset"
+              sx={{ backgroundColor: "#ffc107" }}
+              className="reset-btn"
+            >
               Reset
-            </button>
+            </Button>
+            <Button onClick={handleLoginClick} size="small">
+              Already have an account.
+            </Button>
           </div>
         </form>
       </Paper>
