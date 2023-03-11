@@ -1,21 +1,45 @@
 import { useState } from "react";
-import { Button } from "@mui/material";
+import { Button, Container, Paper } from "@mui/material";
 import AdminHelperNavbar from "./AdminHelperNavbar";
 import CloseIcon from "@mui/icons-material/Close";
 import "./adminStyles.css";
+import Helper12 from "./HelperComponents/Helper_1_2";
+import Helper34 from "./HelperComponents/Helper_3_4";
 
 export default function AdminHomepage() {
-  const [openIndividualTeacher, setOpenIndividualTeacher] = useState(false);
+  // const [singleTeacherAddClick, setSingleTeacherAddClick] = useState(false);
+  // const [multipleTeacherClick, setMultipleTeacherClick] = useState(false);
+  // const [singleStudentAddClick, setSingleStudentAddClick] = useState(false);
+  // const [multipleStudentAddClick, setMultipleStudentAddClick] = useState(false);
+  const [component, setComponent] = useState(<></>);
+  const [hidden, setHidden] = useState(true);
 
-  function handleIndividualTeacherAddClick(e) {
-    setOpenIndividualTeacher(!openIndividualTeacher);
+  function handleIndividualTeacherAddClick() {
+    setComponent(<Helper12 prop={1} />);
+    setHidden(false);
+  }
+  function handleIndividualStudentAddClick() {
+    setComponent(<Helper12 prop={2} />);
+    setHidden(false);
+  }
+  function handleMultipleTeacherAddClick() {
+    setComponent(<Helper34 prop={3} />);
+    setHidden(false);
+  }
+  function handleMultipleStudentAddClick() {
+    setComponent(<Helper34 prop={4} />);
+    setHidden(false);
+  }
+  function handleCloseHelperClick() {
+    setComponent(<></>);
+    setHidden(true);
   }
 
   return (
     <>
-      <div>
+      <Container>
         <AdminHelperNavbar />
-        <div>
+        <div style={{ marginTop: "100px" }}>
           <div>Total Teacher in Department::</div>
           <div>Total Students in Department::</div>
         </div>
@@ -23,24 +47,28 @@ export default function AdminHomepage() {
           <Button variant="contained" onClick={handleIndividualTeacherAddClick}>
             Add Individual Teacher
           </Button>
-          {openIndividualTeacher && (
-            <div className="model-popup">
-              <div>
-                <button
-                  className="model-popup-close-btn"
-                  onClick={handleIndividualTeacherAddClick}
-                >
-                  <CloseIcon />
-                </button>
-              </div>
-            </div>
-          )}
 
-          <Button variant="contained">Add Teacher Via Excel,CSV </Button>
-          <Button variant="contained">Add Individual Student </Button>
-          <Button variant="contained">Add Student Via Excel,CSV </Button>
+          <Button variant="contained" onClick={handleIndividualStudentAddClick}>
+            Add Individual Student
+          </Button>
+          <Button variant="contained" onClick={handleMultipleTeacherAddClick}>
+            Add Teacher Via Excel,CSV
+          </Button>
+          <Button variant="contained" onClick={handleMultipleStudentAddClick}>
+            Add Student Via Excel,CSV
+          </Button>
         </div>
-      </div>
+        <div>
+          <div>
+            <Container>
+              <button hidden={hidden} onClick={handleCloseHelperClick}>
+                <CloseIcon />
+              </button>
+              {component}
+            </Container>
+          </div>
+        </div>
+      </Container>
     </>
   );
 }

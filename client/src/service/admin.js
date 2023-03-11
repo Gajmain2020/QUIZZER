@@ -26,13 +26,36 @@ export async function loginAdmin(data) {
     return error.response.data;
   }
 }
-
-export async function getAdminDetails(req, res) {
+export async function addTeacherViaAdmin(data) {
   try {
     const response = await axios({
-      url: "http://localhost:5000/admin/get-admin-details",
+      url: "http://localhost:5000/admin/addTeacherViaAdmin",
+      method: "POST",
+      data,
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+export async function addStudentViaAdmin(data) {
+  try {
+    const response = await axios({
+      url: "http://localhost:5000/admin/addStudentViaAdmin",
+      method: "POST",
+      data,
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function getAdminDetails(id) {
+  try {
+    const response = await axios({
+      url: `http://localhost:5000/admin/getAdmin/${id}`,
       method: "GET",
-      data: req,
     });
 
     return response.data;

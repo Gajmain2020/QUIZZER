@@ -60,7 +60,7 @@ export default function AdminLogin() {
         <form>
           <div className="form-container">
             <div className="form-heading">
-              <img src={loginLogo} alt="SignUp Logo" width={60} /> Login Student
+              <img src={loginLogo} alt="SignUp Logo" width={60} /> Login Admin
             </div>
             {errorMessage !== "" && (
               <Alert

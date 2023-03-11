@@ -10,6 +10,10 @@ const teacherSchema = mongoose.Schema({
   email: reqString,
   password: reqString,
   confirmPassword: reqString,
+  authorized: {
+    type: Boolean,
+    default: false,
+  },
   department: reqString,
   createdTest: [String],
   createdAt: {

@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import AdminSchema from "../models/admin.js";
+import TeacherSchema from "../models/teacher.js";
+import StudentSchema from "../models/student.js";
 
 export const signupAdmin = async (req, res) => {
   const {
@@ -110,6 +112,72 @@ export const loginAdmin = async (req, res) => {
       });
   } catch (error) {
     console.log(error.message);
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+
+export const getAdminDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const details = await AdminSchema.findById(id);
+    return res.status(200).json({ details, successful: true });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+
+export const addTeacherViaAdmin = async (req, res) => {
+  const { fullName, email, department } = req.body;
+  try {
+    const isExistingUser = await TeacherSchema.findOne({ email });
+    if (isExistingUser) {
+      return res
+        .status(400)
+        .json({ message: "This email already exist", successful: false });
+    }
+    const hashPassword = await bcrypt.hash(email, 10);
+    const result = await TeacherSchema.create({
+      fullName,
+      email,
+      password: hashPassword,
+      confirmPassword: hashPassword,
+      authorized: true,
+      department,
+    });
+
+    return res
+      .status(200)
+      .json({ message: "Teacher added Successfully", successful: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+export const addStudentViaAdmin = async (req, res) => {
+  const { fullName, email, department, semester, section } = req.body;
+  try {
+    const isExistingUser = await StudentSchema.findOne({ email });
+    if (isExistingUser) {
+      return res
+        .status(400)
+        .json({ message: "This email already exist", successful: false });
+    }
+    const hashPassword = await bcrypt.hash(email, 10);
+    const result = await StudentSchema.create({
+      fullName,
+      email,
+      password: hashPassword,
+      confirmPassword: hashPassword,
+      authorized: true,
+      section,
+      semester,
+      department,
+    });
+
+    return res
+      .status(200)
+      .json({ message: "Student added Successfully", successful: true });
+  } catch (error) {
     return res.status(500).json({ message: error.message, successful: false });
   }
 };
