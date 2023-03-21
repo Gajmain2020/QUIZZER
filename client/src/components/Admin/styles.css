@@ -50,17 +50,6 @@
   box-shadow: 2px 2px 10px black;
 }
 
-/* .reset-btn {
-  background-color: #1976d2;
-  border-radius: 8px;
-  border-radius: 15px;
-  color: #fff;
-  font-family: "Fira Code";
-  height: 30px;
-  margin: 10px auto;
-  width: 120px;
-} */
-
 .error-warning {
   color: red;
   font-size: 0.7em;

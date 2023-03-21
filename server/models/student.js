@@ -10,6 +10,7 @@ const studentSchema = mongoose.Schema({
   semester: reqString,
   section: reqString,
   department: reqString,
+  urn: reqString,
   authorized: {
     type: Boolean,
     default: false,

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import AdminSchema from "../models/admin.js";
@@ -129,6 +130,7 @@ export const getAdminDetails = async (req, res) => {
 
 export const addTeacherViaAdmin = async (req, res) => {
   const { fullName, email, department } = req.body;
+  //
   try {
     const isExistingUser = await TeacherSchema.findOne({ email });
     if (isExistingUser) {
@@ -154,22 +156,25 @@ export const addTeacherViaAdmin = async (req, res) => {
   }
 };
 export const addStudentViaAdmin = async (req, res) => {
-  const { fullName, email, department, semester, section } = req.body;
+  const { fullName, email, department, semester, section, urn } = req.body;
   try {
-    const isExistingUser = await StudentSchema.findOne({ email });
-    if (isExistingUser) {
-      return res
-        .status(400)
-        .json({ message: "This email already exist", successful: false });
+    const isExistingUserByEmail = await StudentSchema.findOne({ email });
+    const isExistingUserByURN = await StudentSchema.findOne({ urn });
+    if (isExistingUserByEmail || isExistingUserByURN) {
+      return res.status(400).json({
+        message: "This email or URN already exist",
+        successful: false,
+      });
     }
     const hashPassword = await bcrypt.hash(email, 10);
-    const result = await StudentSchema.create({
+    await StudentSchema.create({
       fullName,
       email,
       password: hashPassword,
       confirmPassword: hashPassword,
       authorized: true,
       section,
+      urn,
       semester,
       department,
     });
@@ -177,6 +182,165 @@ export const addStudentViaAdmin = async (req, res) => {
     return res
       .status(200)
       .json({ message: "Student added Successfully", successful: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+
+export const getUnauthorizedStudentInfo = async (req, res) => {
+  const { department } = req.query;
+  try {
+    const students = await StudentSchema.find({
+      department,
+      authorized: false,
+    });
+    return res.status(200).json({ students, successful: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+
+export const getUnauthorizedTeacherInfo = async (req, res) => {
+  const { department } = req.query;
+  try {
+    const teachers = await TeacherSchema.find({
+      department,
+      authorized: false,
+    });
+    return res.status(200).json({ teachers, successful: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+export const approveStudent = async (req, res) => {
+  const { id } = req.body;
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).send(`No post with id: ${id}`);
+  try {
+    const student = await StudentSchema.findByIdAndUpdate(id, {
+      $set: { authorized: true },
+    });
+    student.save();
+
+    return res.status(200).json({ student, successful: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+export const rejectStudent = async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).send(`No post with id: ${id}`);
+  try {
+    await StudentSchema.findByIdAndDelete(id);
+
+    return res.status(200).json({ successful: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+export const approveTeacher = async (req, res) => {
+  const { id } = req.body;
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).send(`No post with id: ${id}`);
+  try {
+    const teacher = await TeacherSchema.findByIdAndUpdate(id, {
+      $set: { authorized: true },
+    });
+    teacher.save();
+
+    return res.status(200).json({ teacher, successful: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+export const rejectTeacher = async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).send(`No post with id: ${id}`);
+  try {
+    await TeacherSchema.findByIdAndDelete(id);
+
+    return res.status(200).json({ successful: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+
+export const addStudentViaCSV = async (req, res) => {
+  const studentArray = req.body;
+  console.log(studentArray);
+  var unsuccesfulData = [];
+  var successfulData = [];
+  try {
+    for (let i = 0; i < studentArray.length; i++) {
+      const { fullName, email, department, semester, section, urn } =
+        studentArray[i];
+      const isExistingUser = await StudentSchema.findOne({ email });
+      if (isExistingUser) {
+        unsuccesfulData.push({
+          fullName,
+          email,
+          department,
+          semester,
+          section,
+          urn,
+        });
+        continue;
+      }
+      const hashPassword = await bcrypt.hash(email, 10);
+      const response = await StudentSchema.create({
+        fullName,
+        email,
+        password: hashPassword,
+        confirmPassword: hashPassword,
+        authorized: true,
+        section,
+        semester,
+        department,
+        urn,
+      });
+
+      successfulData.push(response);
+    }
+    return res
+      .status(200)
+      .json({ data: { successfulData, unsuccesfulData }, successful: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+export const addTeacherViaCSV = async (req, res) => {
+  const teacherArray = req.body;
+  var unsuccesfulData = [];
+  var successfulData = [];
+  try {
+    for (let i = 0; i < teacherArray.length; i++) {
+      const { fullName, email, department } = teacherArray[i];
+      const isExistingUser = await TeacherSchema.findOne({ email });
+      if (isExistingUser) {
+        unsuccesfulData.push({
+          fullName,
+          email,
+          department,
+        });
+        continue;
+      }
+      const hashPassword = await bcrypt.hash(email, 10);
+      const response = await TeacherSchema.create({
+        fullName,
+        email,
+        password: hashPassword,
+        confirmPassword: hashPassword,
+        authorized: true,
+        department,
+      });
+
+      successfulData.push(response);
+    }
+    return res
+      .status(200)
+      .json({ data: { successfulData, unsuccesfulData }, successful: true });
   } catch (error) {
     return res.status(500).json({ message: error.message, successful: false });
   }

@@ -98,7 +98,7 @@ export default function AdminSignup() {
                 {errorMessage}
               </Alert>
             )}
-            <label for="fullName">Full Name * </label>
+            <label htmlFor="fullName">Full Name * </label>
             <input
               className="form-item"
               onChange={handleChange}

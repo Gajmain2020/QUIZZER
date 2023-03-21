@@ -20,6 +20,10 @@ import AdminHomepage from "./components/Admin/AdminHomepage";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import LoginStudent from "./components/Student/Login/LoginStudent";
 import LoginTeacher from "./components/Teacher/Login/LoginTeacher";
+import AuthorizationComponentStudent from "./components/Admin/Authorization/AuthorizationComponentStudent";
+import AuthorizationComponentTeacher from "./components/Admin/Authorization/AuthorizationComponentTeacher";
+import NotAuthorized from "./components/NotAuthorized/NotAuthorized";
+import NotAuthorizedSignup from "./components/NotAuthorized/NotAuthorizedSignup";
 
 function Component() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -66,6 +70,14 @@ function Component() {
         <Routes>
           <Route path="/" exact element={<Homepage />} />
           <Route path="/admin">
+            <Route
+              path=":id/student-queue"
+              element={<AuthorizationComponentStudent />}
+            />
+            <Route
+              path=":id/teacher-queue"
+              element={<AuthorizationComponentTeacher />}
+            />
             <Route path="homepage/:id" exact element={<AdminHomepage />} />
             <Route path="dashboard/:id" exact element={<AdminDashboard />} />
           </Route>
@@ -88,6 +100,11 @@ function Component() {
             <Route path="homepage/:id" exact element={<TeacherHomepage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
+          <Route path="/not-authorized-user" element={<NotAuthorized />} />
+          <Route
+            path="/not-authorized-signup"
+            element={<NotAuthorizedSignup />}
+          />
         </Routes>
       </div>
       {/* <Footer /> */}

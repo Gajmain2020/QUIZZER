@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Fira+Code:wght@300;500;600&family=Labrada:ital,wght@0,100;0,200;0,400;1,200&family=Montserrat&family=Ubuntu&family=Zeyada&display=swap");
+
 * {
   margin: 0;
   padding: 0;
@@ -63,4 +65,98 @@
   align-items: center;
   width: 100;
   justify-content: center;
+}
+
+.admin-homepage {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+}
+
+.model-element {
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.table-heading {
+  margin: 100px 0 30px 0;
+  font-family: "ubuntu";
+  font-weight: bolder;
+  border-bottom: solid 1px whitesmoke;
+  text-align: center;
+}
+.table {
+  display: flex;
+  height: 100vh;
+  align-items: flex-start;
+}
+
+.table-header-item {
+  font-family: "ubuntu" !important;
+  font-size: 1em !important;
+  font-weight: bold !important;
+}
+
+.table-body-item {
+  color: black !important;
+  font-size: 0.9em !important;
+}
+
+.add-remove-btn {
+  display: flex !important;
+  justify-content: space-evenly;
+}
+
+.response-table {
+  display: flex;
+  gap: 80px;
+  margin: 20px;
+  padding: 20px;
+}
+.hello {
+  display: flex;
+  height: 100px;
+  align-items: center !important;
+  justify-content: center;
+  font-family: "ubuntu";
+  font-size: 1.4em;
+  color: #4d455d;
+}
+
+.error-page {
+  height: 100vh;
+  margin: 10px 5px 0px 5px;
+}
+
+.main-error {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  font-family: "DM Serif Display", "ubuntu", serif;
+  font-size: 3em;
+}
+
+.error-status-code {
+  font-size: 3em;
+}
+.error-text {
+  display: flex;
+  align-items: center;
+  margin-right: 1em;
+}
+
+.error-message {
+  /* outline: solid 1px red; */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  font-family: "ubuntu";
+  margin: 1em 0;
+  font-size: 2em;
 }

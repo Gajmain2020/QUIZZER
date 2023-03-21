@@ -13,6 +13,7 @@ export default function Helper({ prop }) {
     email: "",
     semester: "",
     section: "",
+    urn: "",
   };
   const [adminToken, setAdminToken] = useState(
     JSON.parse(localStorage.getItem("token"))
@@ -62,6 +63,7 @@ export default function Helper({ prop }) {
       department: adminData.details.department,
       semester: data.semester,
       section: data.section,
+      urn: data.urn,
     };
     console.log(student);
     if (
@@ -69,7 +71,8 @@ export default function Helper({ prop }) {
       student.email === "" ||
       student.department === "" ||
       student.section === "" ||
-      student.semester === ""
+      student.semester === "" ||
+      student.urn === ""
     ) {
       setProcessing(false);
       setSuccessfulStudent(false);
@@ -158,6 +161,15 @@ export default function Helper({ prop }) {
             />
             {prop === 2 && (
               <>
+                <label htmlFor="urn">URN(University Roll Number) *</label>
+                <input
+                  onChange={handleChange}
+                  className="form-item"
+                  type="urn"
+                  name="urn"
+                  placeholder="112233445566"
+                  id="urn"
+                />
                 <select
                   className="form-item dropdown"
                   placeholder="Select Semester"

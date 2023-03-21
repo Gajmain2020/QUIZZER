@@ -51,6 +51,34 @@ export async function addStudentViaAdmin(data) {
   }
 }
 
+export async function getUnauthorizedStudent(data) {
+  try {
+    const response = await axios({
+      url: `http://localhost:5000/admin/unauthorized-student?department=${
+        data || "none"
+      }`,
+      method: "GET",
+    });
+
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+export async function getUnauthorizedTeacher(data) {
+  try {
+    const response = await axios({
+      url: `http://localhost:5000/admin/unauthorized-teacher?department=${
+        data || "none"
+      }`,
+      method: "GET",
+    });
+
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
 export async function getAdminDetails(id) {
   try {
     const response = await axios({
@@ -58,6 +86,74 @@ export async function getAdminDetails(id) {
       method: "GET",
     });
 
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function approveStudent(data) {
+  try {
+    await axios({
+      url: `http://localhost:5000/admin/approve-student`,
+      method: "PATCH",
+      data,
+    });
+  } catch (error) {
+    return error.response.data;
+  }
+}
+export async function approveTeacher(data) {
+  try {
+    await axios({
+      url: `http://localhost:5000/admin/approve-teacher`,
+      method: "PATCH",
+      data,
+    });
+  } catch (error) {
+    return error.response.data;
+  }
+}
+export async function rejectStudent(data) {
+  try {
+    await axios({
+      url: `http://localhost:5000/admin/reject-student/${data.id}`,
+      method: "DELETE",
+    });
+  } catch (error) {
+    return error.response.data;
+  }
+}
+export async function rejectTeacher(data) {
+  try {
+    await axios({
+      url: `http://localhost:5000/admin/reject-teacher/${data.id}`,
+      method: "DELETE",
+    });
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function addStudentViaCSV(data) {
+  try {
+    const response = await axios({
+      url: `http://localhost:5000/admin/add-student-via-csv`,
+      method: "POST",
+      data,
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+export async function addTeacherViaCSV(data) {
+  try {
+    const response = await axios({
+      url: `http://localhost:5000/admin/add-teacher-via-csv`,
+      method: "POST",
+      data,
+    });
     return response.data;
   } catch (error) {
     return error.response.data;

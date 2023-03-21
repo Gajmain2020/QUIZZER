@@ -18,6 +18,7 @@ export default function SignupStudent() {
     semester: "",
     section: "",
     department: "",
+    urn: "",
   };
 
   const navigate = useNavigate();
@@ -39,9 +40,15 @@ export default function SignupStudent() {
       studentSignupData.confirmPassword === "" ||
       studentSignupData.semester === "" ||
       studentSignupData.section === "" ||
-      studentSignupData.department === ""
+      studentSignupData.department === "" ||
+      studentSignupData.urn === ""
     ) {
       setErrorMessage("* Marked can not be empty.");
+      setProcessing(false);
+      return;
+    }
+    if (studentSignupData.urn.length !== 12) {
+      setErrorMessage("URN must contain 12 digits.");
       setProcessing(false);
       return;
     }
@@ -66,17 +73,7 @@ export default function SignupStudent() {
     }
     setProcessing(false);
 
-    localStorage.setItem(
-      "token",
-      JSON.stringify({
-        token: token?.token,
-        id: token?.id,
-        userType: token?.userType,
-        name: token?.name,
-      })
-    );
-
-    navigate(`/student/homepage/${token.id}`);
+    navigate(`/not-authorized-signup`);
   };
 
   function handleClear(e) {
@@ -119,7 +116,7 @@ export default function SignupStudent() {
               </Alert>
             )}
 
-            <label for="fullName">Full Name * </label>
+            <label htmlFor="fullName">Full Name * </label>
             <input
               id="fullName"
               className="form-item"
@@ -137,6 +134,15 @@ export default function SignupStudent() {
               name="email"
               id="email"
               label="Email"
+            />
+            <label htmlFor="urn">URN (University Roll Number) *</label>
+            <input
+              className="form-item"
+              placeholder="112233445566"
+              required
+              onChange={handleChange}
+              name="urn"
+              id="urn"
             />
             <label htmlFor="password">Password *</label>
             <input

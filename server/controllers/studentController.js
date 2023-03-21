@@ -9,16 +9,18 @@ export async function signupStudent(req, res) {
     password,
     confirmPassword,
     semester,
+    urn,
     section,
     department,
   } = req.body;
 
   try {
-    const isUserExisting = await StudentSchema.findOne({ email });
-    if (isUserExisting)
+    const isUserExistingByEmail = await StudentSchema.findOne({ email });
+    const isUserExistingByUrn = await StudentSchema.findOne({ urn });
+    if (isUserExistingByUrn || isUserExistingByEmail)
       return res
         .status(400)
-        .json({ message: "Email elready exists.", successful: false });
+        .json({ message: "Email or URN elready exists.", successful: false });
 
     if (password !== confirmPassword)
       return res
@@ -33,6 +35,7 @@ export async function signupStudent(req, res) {
       password: hashPassword,
       confirmPassword: hashPassword,
       semester,
+      urn,
       section,
       department,
     });
@@ -101,6 +104,7 @@ export async function loginStudent(req, res) {
       .json({
         token,
         id: result._id,
+        authorized: result.authorized,
         successful: true,
         userType: "student",
         name: result.fullName,

@@ -26,6 +26,10 @@ export default function LoginStudent() {
     }
 
     const token = await loginStudent(loginData);
+    if (token.authorized === false) {
+      navigate("/not-authorized-user");
+      return;
+    }
     if (!token.successful) {
       setErrorMessage(token.message);
       setProcessing(false);

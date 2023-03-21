@@ -7,7 +7,6 @@ export async function signupStudent(data) {
       method: "POST",
       data,
     });
-    console.log("axios is working");
     return response.data;
   } catch (err) {
     return err.response.data;

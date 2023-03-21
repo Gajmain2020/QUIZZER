@@ -12,8 +12,11 @@ import Footer from "../Footer/Footer";
 const Homepage = () => {
   const navigate = useNavigate();
 
-  const navigateToTeacher = () => {
-    navigate("/teacher");
+  const navigateToTeacherLogin = () => {
+    navigate("/login/teacher");
+  };
+  const navigateToStudentLogin = () => {
+    navigate("/login/student");
   };
 
   return (
@@ -25,7 +28,7 @@ const Homepage = () => {
             <Button
               variant="contained"
               className="button"
-              onClick={navigateToTeacher}
+              onClick={navigateToTeacherLogin}
             >
               <img
                 className="navigation-logo"
@@ -41,8 +44,7 @@ const Homepage = () => {
             <Button
               className="button"
               variant="contained"
-              component={Link}
-              to="/student"
+              onClick={navigateToStudentLogin}
             >
               <img
                 className="navigation-logo"

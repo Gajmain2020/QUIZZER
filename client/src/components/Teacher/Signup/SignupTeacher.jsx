@@ -58,17 +58,7 @@ export default function SignupTeacher() {
     }
     setProcessing(false);
 
-    localStorage.setItem(
-      "token",
-      JSON.stringify({
-        token: token?.token,
-        id: token?.id,
-        userType: token?.userType,
-        name: token?.name,
-      })
-    );
-
-    navigate(`/teacher/homepage/${token.id}`);
+    navigate(`/not-authorized-signup`);
   };
 
   function handleClear(e) {
