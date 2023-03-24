@@ -26,7 +26,7 @@ app.post("/verify-jwt", (req, res) => {
   const token = req.body.token;
   jwt.verify(token, "test", (err, varifiedJwt) => {
     if (err) {
-      return res.status(200).json({ verified: false });
+      return res.status(401).json({ verified: false });
       // return;
     } else {
       res.status(200).json({ verified: true, details: varifiedJwt });

@@ -47,7 +47,7 @@ export async function signupStudent(req, res) {
       },
       "test",
       {
-        expiresIn: "1h",
+        expiresIn: "5h",
       }
     );
 
@@ -93,7 +93,7 @@ export async function loginStudent(req, res) {
         name: result.fullName,
       },
       "test",
-      { expiresIn: "1h" }
+      { expiresIn: "5h" }
     );
     return res
       .cookie("access_token", token, {
@@ -122,5 +122,84 @@ export async function getStudentDetails(req, res) {
     return res.status(200).json({ user, successful: true });
   } catch (error) {
     return res.status(500).json({ message: error.message, successful: false });
+  }
+}
+
+export async function getAllStudents(req, res) {
+  const { department } = req.params;
+  try {
+    const students = await StudentSchema.find({ department });
+    return res.status(200).json({ students, successful: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+}
+
+export async function getStudentByFilter(req, res) {
+  try {
+    const { section, semester, URN, department } = req.query;
+
+    if (section === "" && semester === "" && URN === "") {
+      const result = await StudentSchema.find({
+        department,
+      });
+      return res.status(200).json({ result, successful: true });
+    }
+    if (section !== "" && semester === "" && URN === "") {
+      const result = await StudentSchema.find({
+        department,
+        section,
+      });
+      return res.status(200).json({ result, successful: true });
+    }
+    if (section === "" && semester !== "" && URN === "") {
+      const result = await StudentSchema.find({
+        department,
+        semester,
+      });
+      return res.status(200).json({ result, successful: true });
+    }
+    if (section === "" && semester === "" && URN !== "") {
+      const result = await StudentSchema.find({
+        department,
+        urn: URN,
+      });
+      return res.status(200).json({ result, successful: true });
+    }
+    if (section !== "" && semester !== "" && URN === "") {
+      const result = await StudentSchema.find({
+        department,
+        section,
+        semester,
+      });
+      return res.status(200).json({ result, successful: true });
+    }
+    if (section === "" && semester !== "" && URN !== "") {
+      const result = await StudentSchema.find({
+        department,
+        urn: URN,
+        semester,
+      });
+      return res.status(200).json({ result, successful: true });
+    }
+    if (section !== "" && semester === "" && URN !== "") {
+      const result = await StudentSchema.find({
+        department,
+        urn: URN,
+        section,
+      });
+      return res.status(200).json({ result, successful: true });
+    }
+    if (section !== "" && semester !== "" && URN !== "") {
+      const result = await StudentSchema.find({
+        department,
+        semester,
+        section,
+        urn: URN,
+      });
+      return res.status(200).json({ result, successful: true });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful });
   }
 }

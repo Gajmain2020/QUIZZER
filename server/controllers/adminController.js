@@ -51,7 +51,7 @@ export const signupAdmin = async (req, res) => {
         name: fullName,
       },
       "test",
-      { expiresIn: "1h" }
+      { expiresIn: "5h" }
     );
     return res
       .cookie("access_token", token, {
@@ -96,7 +96,7 @@ export const loginAdmin = async (req, res) => {
         name: result.fullName,
       },
       "test",
-      { expiresIn: "1h" }
+      { expiresIn: "5h" }
     );
     return res
       .cookie("access_token", token, {

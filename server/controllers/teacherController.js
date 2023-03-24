@@ -38,7 +38,7 @@ export const signupTeacher = async (req, res) => {
       },
       "test",
       {
-        expiresIn: "1h",
+        expiresIn: "5h",
       }
     );
     return res
@@ -85,7 +85,7 @@ export async function loginTeacher(req, res) {
         name: result.fullName,
       },
       "test",
-      { expiresIn: "1h" }
+      { expiresIn: "5h" }
     );
     return res
       .cookie("access_token", token, {

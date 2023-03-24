@@ -86,7 +86,7 @@ export default function LoginStudent() {
               placeholder="Ex Jone@mail.com"
               id="email"
             />
-            <label htmlFor="password">Password*</label>
+            <label htmlFor="password">Password *</label>
             <input
               id="password"
               className="form-item"

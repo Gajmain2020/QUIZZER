@@ -57,7 +57,11 @@ export default function LoginTeacher() {
     <>
       <Navbar />
 
-      <Paper elevation={6} className="signup-form-container">
+      <Paper
+        elevation={6}
+        className="signup-form-container"
+        sx={{ backgroundColor: "#E5D1FA" }}
+      >
         <form>
           <div className="form-container">
             <div className="form-heading">
@@ -73,17 +77,20 @@ export default function LoginTeacher() {
                 {errorMessage}
               </Alert>
             )}
-
+            <label htmlFor="email">Eamail *</label>
             <input
               onChange={handleChange}
               className="form-item"
+              id="email"
               type="email"
               name="email"
-              placeholder="Email"
+              placeholder="Ex Jone@mail.com"
             />
+            <label htmlFor="password">Password *</label>
             <input
               className="form-item  "
               onChange={handleChange}
+              id="password"
               type="password"
               name="password"
               placeholder="Password"

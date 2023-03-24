@@ -160,3 +160,76 @@
   margin: 1em 0;
   font-size: 2em;
 }
+
+.teacher-homepage-btns {
+  outline: solid 1px red;
+  display: flex;
+  flex-wrap: nowrap;
+  width: inherit;
+}
+
+.filter-components {
+  /* outline: solid 1px red; */
+  display: flex;
+  margin-top: 100px;
+  flex-direction: column;
+  gap: 1em;
+  border-radius: 8px;
+  background-color: #f9f5fe;
+  padding: 20px 10px;
+}
+
+.filter-component {
+  display: flex;
+  justify-content: space-evenly;
+}
+.response-message {
+  color: rgb(51, 51, 51);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  font-family: "Montserrat";
+  font-weight: 800;
+  border-bottom: solid 1px rgb(0, 0, 0);
+}
+.home-btn {
+  /* outline: solid 1px red; */
+  display: flex;
+  /* align-self: flex-end; */
+  /* margin-left: 30px; */
+  padding-left: 2.55em;
+}
+
+.student-table {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.main-report-container {
+  display: flex;
+  min-height: 600px;
+  margin-top: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.report-container {
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.attempted-test {
+  margin: 20px;
+  width: 200px;
+  height: 200px;
+  background-color: red;
+}
+
+.profile-container {
+  outline: solid 1px red;
+  padding: 10px 5px;
+}

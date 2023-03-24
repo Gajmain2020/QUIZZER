@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-import { Container } from "@mui/material";
+import { CircularProgress, Container } from "@mui/material";
 
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
 import axios from "axios";
 import "./appStyles.css";
@@ -24,44 +24,25 @@ import AuthorizationComponentStudent from "./components/Admin/Authorization/Auth
 import AuthorizationComponentTeacher from "./components/Admin/Authorization/AuthorizationComponentTeacher";
 import NotAuthorized from "./components/NotAuthorized/NotAuthorized";
 import NotAuthorizedSignup from "./components/NotAuthorized/NotAuthorizedSignup";
+import ViewAllStudents from "./components/Teacher/Homepage/helper/ViewAllStudents";
+import ViewReport from "./components/Teacher/Homepage/helper/ViewReport";
+import ViewReportIndividual from "./components/Teacher/Homepage/helper/ViewReportIndividual";
 
 function Component() {
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [user, setUser] = useState(null);
 
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
 
-  // setUser(res);
-  // <homepage user= {user}>
-  // {...user}
-
-  useEffect(() => {
-    if (localStorage.getItem("token") == null) {
-      setIsLoading(false);
-      setUser(null);
-      setIsLoggedIn(false);
-    } else {
-      axios({
-        url: "http://localhost:5000/verify-jwt",
-        method: "post",
-        data: JSON.parse(localStorage.getItem("token")),
-      }).then((res) => {
-        if (res.data.verified === false) {
-          localStorage.clear();
-          setIsLoggedIn(false);
-          // navigate("/login");
-        } else {
-          setUser(res.data);
-        }
-        setIsLoading(false);
-      });
-    }
-  }, []);
-
-  if (isLoading) {
-    return <>Loading</>;
-  }
+  // if (isLoading) {
+  //   return (
+  //     <>
+  //       <CircularProgress />
+  //     </>
+  //   );
+  // }
 
   return (
     <Container maxWidth="lg" className="mainContainer">
@@ -98,6 +79,17 @@ function Component() {
           <Route path="/teacher">
             <Route path="dashboard/:id" exact element={<TeacherDashboard />} />
             <Route path="homepage/:id" exact element={<TeacherHomepage />} />
+            <Route
+              path=":id/view-all-students"
+              exact
+              element={<ViewAllStudents />}
+            />
+            <Route path=":id/view-report" exact element={<ViewReport />} />
+            <Route
+              path="view-report/student/:id"
+              exact
+              element={<ViewReportIndividual />}
+            />
           </Route>
           <Route path="*" element={<NotFound />} />
           <Route path="/not-authorized-user" element={<NotAuthorized />} />
