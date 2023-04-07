@@ -144,6 +144,7 @@ export default function ViewReport() {
       </Container>
     </>
   );
+
   function printRow(data) {
     function handleStudentClick(id) {
       navigate(`/teacher/view-report/student/${id}`);

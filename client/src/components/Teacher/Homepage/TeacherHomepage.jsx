@@ -13,12 +13,16 @@ function TeacherHomepage() {
   }
   function handleCreateTestClick() {
     alert("Create Test button clicked");
+    navigate(`/teacher/${id}/create-quiz`);
   }
   function handleViewAllStudentsClick() {
     navigate(`/teacher/${id}/view-all-students`);
   }
   function handleViewReportClick() {
     navigate(`/teacher/${id}/view-report`);
+  }
+  function handleViewReportByQuizClick() {
+    alert("View Report button clicked");
   }
 
   return (
@@ -34,7 +38,10 @@ function TeacherHomepage() {
             Create Test
           </Button>
           <Button variant="contained" onClick={handleViewReportClick}>
-            View Reports
+            View Reports (Student List)
+          </Button>
+          <Button variant="contained" onClick={handleViewReportByQuizClick}>
+            View Reports (Quiz List)
           </Button>
           <Button variant="contained" onClick={handleViewAllStudentsClick}>
             See all student

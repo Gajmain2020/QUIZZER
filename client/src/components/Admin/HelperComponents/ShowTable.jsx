@@ -14,7 +14,7 @@ export default function ShowTable({ receivedData, prop }) {
   console.log(successfulUsers);
   return (
     <>
-      <div className="hello">
+      <div className="main-container">
         <u>
           {" "}
           Out of {successfulUsers.length + rejectedUsers.length} data from CSV

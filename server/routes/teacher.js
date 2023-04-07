@@ -1,4 +1,5 @@
 import express from "express";
+// import { authTeacher } from "../middleware/authTeacher.js";
 
 import {
   getTeacherDetails,

@@ -27,6 +27,8 @@ import NotAuthorizedSignup from "./components/NotAuthorized/NotAuthorizedSignup"
 import ViewAllStudents from "./components/Teacher/Homepage/helper/ViewAllStudents";
 import ViewReport from "./components/Teacher/Homepage/helper/ViewReport";
 import ViewReportIndividual from "./components/Teacher/Homepage/helper/ViewReportIndividual";
+import CreateQuiz from "./components/Teacher/Homepage/helper/CreateQuiz";
+import AddQuestion from "./components/Teacher/Homepage/helper/AddQuestion";
 
 function Component() {
   const navigate = useNavigate();
@@ -34,15 +36,39 @@ function Component() {
 
   const [user, setUser] = useState(null);
 
-  // const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // if (isLoading) {
-  //   return (
-  //     <>
-  //       <CircularProgress />
-  //     </>
-  //   );
-  // }
+  useEffect(() => {
+    if (localStorage.getItem("token") == null) {
+      setIsLoading(false);
+      setUser(null);
+      setIsLoggedIn(false);
+      // navigate("/not-authorized");
+    } else {
+      axios({
+        url: "http://localhost:5000/verify-jwt",
+        method: "post",
+        data: JSON.parse(localStorage.getItem("token")),
+      }).then((res) => {
+        if (res.data.verified === false) {
+          localStorage.clear();
+          setIsLoggedIn(false);
+          navigate("/not-authorized-user");
+        } else {
+          setUser(res.data);
+        }
+        setIsLoading(false);
+      });
+    }
+  }, []);
+
+  if (isLoading) {
+    return (
+      <>
+        <CircularProgress />
+      </>
+    );
+  }
 
   return (
     <Container maxWidth="lg" className="mainContainer">
@@ -79,16 +105,26 @@ function Component() {
           <Route path="/teacher">
             <Route path="dashboard/:id" exact element={<TeacherDashboard />} />
             <Route path="homepage/:id" exact element={<TeacherHomepage />} />
-            <Route
-              path=":id/view-all-students"
-              exact
-              element={<ViewAllStudents />}
-            />
-            <Route path=":id/view-report" exact element={<ViewReport />} />
+            <Route path=":id">
+              <Route
+                path="view-all-students"
+                exact
+                element={<ViewAllStudents />}
+              />
+              <Route path="view-report" exact element={<ViewReport />} />
+              <Route path="create-quiz" exact element={<CreateQuiz />} />
+            </Route>
             <Route
               path="view-report/student/:id"
               exact
               element={<ViewReportIndividual />}
+            />
+          </Route>
+          <Route path="quiz">
+            <Route
+              path=":quizName/add-question"
+              exact
+              element={<AddQuestion />}
             />
           </Route>
           <Route path="*" element={<NotFound />} />

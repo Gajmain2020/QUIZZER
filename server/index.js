@@ -8,6 +8,7 @@ import jwt from "jsonwebtoken";
 import studentRoutes from "./routes/student.js";
 import teacherRoutes from "./routes/teacher.js";
 import adminRoutes from "./routes/admin.js";
+import quizRoutes from "./routes/quiz.js";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -21,12 +22,13 @@ app.use(cookieParser());
 app.use("/student", studentRoutes);
 app.use("/teacher", teacherRoutes);
 app.use("/admin", adminRoutes);
+app.use("/quiz", quizRoutes);
 
 app.post("/verify-jwt", (req, res) => {
   const token = req.body.token;
   jwt.verify(token, "test", (err, varifiedJwt) => {
     if (err) {
-      return res.status(401).json({ verified: false });
+      return res.status(200).json({ verified: false });
       // return;
     } else {
       res.status(200).json({ verified: true, details: varifiedJwt });

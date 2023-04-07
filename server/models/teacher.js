@@ -15,7 +15,7 @@ const teacherSchema = mongoose.Schema({
     default: false,
   },
   department: reqString,
-  createdTest: [String],
+  createdQuiz: [{ semester: String, quizName: String, quizId: String }],
   createdAt: {
     type: Date,
     default: new Date(),
