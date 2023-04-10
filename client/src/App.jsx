@@ -29,6 +29,9 @@ import ViewReport from "./components/Teacher/Homepage/helper/ViewReport";
 import ViewReportIndividual from "./components/Teacher/Homepage/helper/ViewReportIndividual";
 import CreateQuiz from "./components/Teacher/Homepage/helper/CreateQuiz";
 import AddQuestion from "./components/Teacher/Homepage/helper/AddQuestion";
+import ViewQuizes from "./components/Teacher/Homepage/helper/ViewQuizes";
+import EditQuiz from "./components/Teacher/Homepage/helper/EditQuiz";
+import ViewQuiz from "./components/Teacher/Homepage/helper/ViewQuiz";
 
 function Component() {
   const navigate = useNavigate();
@@ -113,6 +116,7 @@ function Component() {
               />
               <Route path="view-report" exact element={<ViewReport />} />
               <Route path="create-quiz" exact element={<CreateQuiz />} />
+              <Route path="view-quizes" exact element={<ViewQuizes />} />
             </Route>
             <Route
               path="view-report/student/:id"
@@ -126,6 +130,8 @@ function Component() {
               exact
               element={<AddQuestion />}
             />
+            <Route path="view-quiz/:quizName" exact element={<ViewQuiz />} />
+            <Route path="edit-quiz/:quizName" exact element={<EditQuiz />} />
           </Route>
           <Route path="*" element={<NotFound />} />
           <Route path="/not-authorized-user" element={<NotAuthorized />} />

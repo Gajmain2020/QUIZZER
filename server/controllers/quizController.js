@@ -65,9 +65,10 @@ export const getQuizData = async (req, res) => {
     const { quizName } = req.params;
     const data = await QuizSchema.findOne({ quizName });
     if (data === null) {
-      return res
-        .status(404)
-        .json({ message: "No quiz found with name '" + quizName });
+      return res.status(404).json({
+        message: "No quiz found with name '" + quizName,
+        successful: false,
+      });
     }
     return res.status(200).json({ data, successful: true });
   } catch (error) {
@@ -76,4 +77,136 @@ export const getQuizData = async (req, res) => {
       successful: false,
     });
   }
+};
+
+export const addQuestionsViaCSV = async (req, res) => {
+  try {
+    const questions = req.body;
+    console.log(questions);
+    const { quizId } = req.params;
+    const quiz = await QuizSchema.findById(quizId);
+    if (quiz === null) {
+      return res
+        .status(404)
+        .json({ message: "No quiz found with id '" + quizId });
+    }
+
+    // * pushing the questions to the array in database
+    for (let i = 0; i < questions.length; i++) {
+      quiz.questions.push(questions[i]);
+    }
+
+    //* updating the quiz data
+    const response = await QuizSchema.findByIdAndUpdate(quizId, quiz, {
+      new: true,
+    });
+    return res
+      .status(200)
+      .json({ message: "Questions added successfully", successful: true });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+      successful: false,
+    });
+  }
+};
+
+export const addIndividualQuestion = async (req, res) => {
+  try {
+    const question = req.body;
+    const { quizId } = req.params;
+
+    const quiz = await QuizSchema.findById(quizId);
+
+    if (!quiz) {
+      return res.status(404).json({
+        message: "Quiz not found",
+        successful: false,
+      });
+    }
+
+    quiz.questions.push(question);
+
+    await QuizSchema.findByIdAndUpdate(quizId, quiz, {
+      new: true,
+    });
+
+    return res
+      .status(200)
+      .json({ message: "Questions added successfully", successful: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+
+export const getAllQuizes = async (req, res) => {
+  try {
+    const { teacherId } = req.params;
+
+    const teacher = await TeacherSchema.findById(teacherId);
+    if (teacher === null) {
+      return res
+        .status(404)
+        .json({ message: "No Teahcer found", successful: false });
+    }
+
+    const quizDatas = teacher.createdQuiz;
+    console.log(quizDatas);
+    return res.status(200).json({ quizes: quizDatas, successful: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+
+  return res.status(200).json({ message: "testing successful" });
+};
+
+export const getAllQuestions = async (req, res) => {
+  try {
+    const { quizName } = req.params;
+    const quiz = await QuizSchema.findOne({ quizName });
+    if (quiz === null) {
+      return res.status(404).json({
+        message: 'No quiz found with name "' + quizName + ".",
+        successful: false,
+      });
+    }
+    return res.status(200).json({ quiz: quiz, successful: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+
+export const editSingleQuestion = async (req, res) => {
+  const { quizId } = req.params;
+  const newQuestion = req.body;
+
+  try {
+    const quiz = await QuizSchema.findById(quizId);
+
+    const removeQuestionIndex = quiz.questions.findIndex(
+      (q) => q.id === newQuestion.questionId
+    );
+
+    quiz.questions[removeQuestionIndex].remove();
+
+    quiz.questions.push({
+      question: newQuestion.question,
+      options: newQuestion.options,
+      correctOption: newQuestion.correctOption,
+    });
+
+    const response = await QuizSchema.findByIdAndUpdate(quizId, quiz, {
+      new: true,
+    });
+
+    console.log(response);
+
+    return res
+      .status(200)
+      .json({ message: "try new thing for the first time" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+
+  return res.status(200).json("Testing successful");
 };

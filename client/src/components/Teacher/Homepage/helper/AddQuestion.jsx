@@ -6,9 +6,13 @@ import {
   TextField,
 } from "@mui/material";
 import { Container } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getQuizData } from "../../../../service/quiz";
+import {
+  addIndividualQuestion,
+  addQuestionsViaCSV,
+  getQuizData,
+} from "../../../../service/quiz";
 import Navbar from "../../../Navbar/Navbar";
 import HomeIcon from "@mui/icons-material/Home";
 import Papa from "papaparse";
@@ -17,16 +21,22 @@ export default function AddQuestion() {
   const navigate = useNavigate();
   const locn = useLocation();
   const quizName = locn.pathname.split("/")[2];
+  const formRef = useRef(null);
   const [quizData, setQuizData] = useState({});
   const [quizQuestions, setQuizQuestions] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [option, setOption] = useState(0);
   const [loading, setLoading] = useState(true);
   const [disableSubmitButton, setDisableSubmitButton] = useState(true);
   const [questions, setQuestions] = useState([]);
-  const [temp, setTemp] = useState({
+  const [rearrangeQuestions, setRearrangeQuestions] = useState([]);
+  const [individualQuestion, setIndividualQuestion] = useState({
     question: "",
-    option: [],
+    option1: "",
+    option2: "",
+    option3: "",
+    option4: "",
     correctOption: "",
   });
 
@@ -34,13 +44,14 @@ export default function AddQuestion() {
     getQuizData(quizName).then((res) => {
       if (res.successful === false) {
         setErrorMessage(res.message);
+        navigate(-1);
         return;
       }
       setQuizData(() => res.data);
       setQuizQuestions(() => res.data.questions);
       setLoading(() => false);
     });
-  }, [quizName]);
+  }, [quizName, navigate]);
 
   function handleFileUpload(e) {
     Papa.parse(e.target.files[0], {
@@ -62,8 +73,10 @@ export default function AddQuestion() {
   }
 
   function handleSubmitCSV() {
+    // setRearrangeQuestions(() => []);
+    setDisableSubmitButton(() => true);
     for (let i = 0; i < questions.length; i++) {
-      setTemp({
+      rearrangeQuestions.push({
         question: questions[i].Question,
         options: [
           questions[i].Option1,
@@ -74,16 +87,73 @@ export default function AddQuestion() {
         correctOption: questions[i].CorrectOption,
       });
     }
-    console.log(temp);
-    //todo:
-    //! display a table of quetions for all the questions...
-    //! after that give user chance to submit all the questions...
+  }
+
+  async function handleAddQuestionViaCSV() {
+    for (let i = 0; i < rearrangeQuestions.length; ++i) {
+      console.log(rearrangeQuestions[i]);
+      if (
+        rearrangeQuestions[i].question === "" ||
+        rearrangeQuestions[i].options[0] === "" ||
+        rearrangeQuestions[i].options[1] === "" ||
+        rearrangeQuestions[i].options[2] === "" ||
+        rearrangeQuestions[i].options[3] === "" ||
+        rearrangeQuestions[i].correctOption === ""
+      ) {
+        setErrorMessage("Some mandatory data is missing from the CSV file.");
+        return;
+      }
+    }
+    const response = await addQuestionsViaCSV(rearrangeQuestions, quizData);
+    if (response.successful === false) {
+      setErrorMessage(response.message);
+    }
+    setSuccessMessage(response.message);
+    setRearrangeQuestions(() => []);
+  }
+
+  function handleChangeIndividualQuestion(e) {
+    setErrorMessage("");
+    setSuccessMessage("");
+    setIndividualQuestion({
+      ...individualQuestion,
+      [e.target.name]: e.target.value,
+    });
+  }
+  async function handleAddIndividualQestionClick() {
+    if (
+      individualQuestion.question === "" ||
+      individualQuestion.option1 === "" ||
+      individualQuestion.option2 === "" ||
+      individualQuestion.option3 === "" ||
+      individualQuestion.option4 === "" ||
+      individualQuestion.correctOption === ""
+    ) {
+      setErrorMessage("* marked are mandatory.");
+      return;
+    }
+
+    const question = {
+      question: individualQuestion.question,
+      options: [
+        individualQuestion.option1,
+        individualQuestion.option2,
+        individualQuestion.option3,
+        individualQuestion.option4,
+      ],
+      correctOption: individualQuestion.correctOption,
+    };
+    const result = await addIndividualQuestion(question, quizData);
+    if (result.successful === false) {
+      setErrorMessage(result.message);
+    }
+    setSuccessMessage(() => result.message);
+    formRef.current.reset();
   }
 
   return (
     <>
       <Navbar />
-
       <Container className="add-question-container" sx={{ marginTop: "100px" }}>
         <Paper className="quiz-details-container" elevation={6}>
           <div className="home-btn">
@@ -141,7 +211,7 @@ export default function AddQuestion() {
             <Paper
               elevation={6}
               className="signup-form-container"
-              sx={{ backgroundColor: "#ccd9ff" }}
+              sx={{ backgroundColor: "#ccd9ff", margin: "0" }}
             >
               <form>
                 <div className="form-container">
@@ -176,24 +246,152 @@ export default function AddQuestion() {
                   >
                     Submit CSV File
                   </Button>
+                  {successMessage !== "" && (
+                    <Alert
+                      severity="success"
+                      onClose={() => {
+                        setSuccessMessage("");
+                      }}
+                    >
+                      {successMessage}
+                    </Alert>
+                  )}
                 </div>
               </form>
             </Paper>
           </>
         ) : (
-          option === 2 && <div className="model-element">HEllo world</div>
+          option === 2 && (
+            <div className="model-element">
+              <Paper className="individual-question-container">
+                <p className="questions-heading">Add Individual Question</p>
+                {errorMessage !== "" && (
+                  <Alert
+                    severity="error"
+                    onClose={() => {
+                      setErrorMessage("");
+                    }}
+                  >
+                    {errorMessage}
+                  </Alert>
+                )}
+                <form
+                  ref={formRef}
+                  className="individual-question-form-container"
+                >
+                  <div className="question-field">
+                    <TextField
+                      sx={{ width: "100%" }}
+                      label="Question *"
+                      name="question"
+                      onChange={handleChangeIndividualQuestion}
+                    />
+                  </div>
+                  <div className="option-field">
+                    <div>
+                      <TextField
+                        label="Option 1 *"
+                        name="option1"
+                        onChange={handleChangeIndividualQuestion}
+                      />
+                      <TextField
+                        label="Option 2 *"
+                        name="option2"
+                        onChange={handleChangeIndividualQuestion}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        label="Option 3 *"
+                        name="option3"
+                        onChange={handleChangeIndividualQuestion}
+                      />
+                      <TextField
+                        label="Option 4 *"
+                        name="option4"
+                        onChange={handleChangeIndividualQuestion}
+                      />
+                    </div>
+                  </div>
+                  <div className="correct-option-field">
+                    <TextField
+                      sx={{ width: "100%" }}
+                      label="Correct Option *"
+                      name="correctOption"
+                      onChange={handleChangeIndividualQuestion}
+                    />
+                  </div>
+                  <Button
+                    size="large"
+                    variant="contained"
+                    color="success"
+                    onClick={handleAddIndividualQestionClick}
+                  >
+                    Add Question
+                  </Button>
+                  {successMessage !== "" && (
+                    <Alert
+                      severity="success"
+                      onClose={() => {
+                        setSuccessMessage("");
+                      }}
+                    >
+                      {successMessage}
+                    </Alert>
+                  )}
+                </form>
+              </Paper>
+            </div>
+          )
         )}
-        <Paper className="questions-container">
-          {quizQuestions.length === 0 && <>hello</>}
-          {quizQuestions.map((question) => (
-            <div>{displayQuestion(question)}</div>
-          ))}
-        </Paper>
+
+        {rearrangeQuestions.length !== 0 && (
+          <Paper className="questions-container">
+            {errorMessage !== "" && (
+              <Alert
+                severity="error"
+                onClose={() => {
+                  setErrorMessage("");
+                }}
+              >
+                {errorMessage}
+              </Alert>
+            )}
+            <p className="questions-heading">
+              No of questions :: {rearrangeQuestions.length}
+            </p>
+
+            {rearrangeQuestions.length !== 0 &&
+              rearrangeQuestions.map((question, index) => {
+                return (
+                  <div key={index} className="question-container">
+                    <div className="question">
+                      {index + 1}
+                      {".   "}
+                      {question.question}
+                    </div>
+                    <div className="options">
+                      <p>A. {question.options[0]} </p>
+                      <p>B. {question.options[1]} </p>
+                      <p>C. {question.options[2]} </p>
+                      <p>D. {question.options[3]} </p>
+                    </div>
+                    <div className="correct-option">
+                      Correct Option : {question.correctOption}
+                    </div>
+                  </div>
+                );
+              })}
+            <Button
+              color="success"
+              variant="contained"
+              onClick={handleAddQuestionViaCSV}
+            >
+              Add Questions
+            </Button>
+          </Paper>
+        )}
       </Container>
     </>
   );
-
-  function displayQuestion() {
-    return <>hello world</>;
-  }
 }
