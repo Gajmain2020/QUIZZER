@@ -31,7 +31,15 @@ export default function ViewQuizes() {
 
   useEffect(() => {
     // ! need to find all the quizes for specific teacher id
-    getAllQuizes(id).then((res) => setQuizes(() => res.quizes));
+    getAllQuizes(id)
+      .then((res) => {
+        if (res.accessGrant === false) {
+          navigate("/not-authorized-user");
+        }
+
+        setQuizes(() => res.quizes);
+      })
+      .catch((err) => setErrorMessage(err.message));
     setLoading(false);
   }, [id]);
 
@@ -39,9 +47,7 @@ export default function ViewQuizes() {
     console.log("semster:", semester);
     console.log("quizName:", quizName);
   }
-  function handleViewClick(id) {
-    navigate(`/quiz/view-quiz/${id}`);
-  }
+
   function handleEditClick(id) {
     navigate(`/quiz/edit-quiz/${id}`);
   }
@@ -99,13 +105,14 @@ export default function ViewQuizes() {
                   <TableCell>S. No.</TableCell>
                   <TableCell>Quiz Name</TableCell>
                   <TableCell>Semester</TableCell>
-                  <TableCell>Edit</TableCell>
-                  <TableCell>View</TableCell>
+                  <TableCell>Edit Or View</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody sx={{ backgroundColor: "#d4e4ff" }}>
-                {quizes.map((quiz, idx) => printRow(quiz, idx))}
-              </TableBody>
+              {quizes !== null && (
+                <TableBody sx={{ backgroundColor: "#d4e4ff" }}>
+                  {quizes.map((quiz, idx) => printRow(quiz, idx))}
+                </TableBody>
+              )}
             </Table>
           )}
         </Box>
@@ -133,21 +140,8 @@ export default function ViewQuizes() {
             onClick={() => handleEditClick(quiz.quizName)}
           >
             <EditIcon fontSize="small" />
-          </Button>
-        </TableCell>
-        <TableCell
-          sx={{
-            border: "solid 1px black",
-            borderStyle: "dotted",
-          }}
-        >
-          <Button
-            size="small"
-            variant="contained"
-            color="success"
-            onClick={() => handleViewClick(quiz.quizName)}
-          >
-            <VisibilityIcon fontSize="small" />
+            &nbsp; &nbsp; OR &nbsp; &nbsp;
+            <VisibilityIcon />
           </Button>
         </TableCell>
       </TableRow>

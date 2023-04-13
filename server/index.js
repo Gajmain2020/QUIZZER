@@ -24,17 +24,17 @@ app.use("/teacher", teacherRoutes);
 app.use("/admin", adminRoutes);
 app.use("/quiz", quizRoutes);
 
-app.post("/verify-jwt", (req, res) => {
-  const token = req.body.token;
-  jwt.verify(token, "test", (err, varifiedJwt) => {
-    if (err) {
-      return res.status(200).json({ verified: false });
-      // return;
-    } else {
-      res.status(200).json({ verified: true, details: varifiedJwt });
-    }
-  });
-});
+// app.post("/verify-jwt", (req, res) => {
+//   const token = req.body.token;
+//   jwt.verify(token, "test", (err, varifiedJwt) => {
+//     if (err) {
+//       return res.status(200).json({ verified: false });
+//       // return;
+//     } else {
+//       res.status(200).json({ verified: true, details: varifiedJwt });
+//     }
+//   });
+// });
 
 mongoose.set("strictQuery", true);
 mongoose

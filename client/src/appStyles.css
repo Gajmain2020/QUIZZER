@@ -429,3 +429,27 @@
   flex-direction: column;
   flex-wrap: wrap;
 }
+
+.add-question-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+  padding: 10px 5px;
+}
+
+.test .option-list {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  text-transform: uppercase;
+  /* border: solid 1px red; */
+}
+.test .option-list .option {
+  border: solid 1px;
+  padding: 10px 10px;
+  cursor: pointer;
+}
+.test .option-list .option.selected {
+  background-color: rgb(186, 186, 186);
+  color: black;
+}

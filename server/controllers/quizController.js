@@ -82,7 +82,6 @@ export const getQuizData = async (req, res) => {
 export const addQuestionsViaCSV = async (req, res) => {
   try {
     const questions = req.body;
-    console.log(questions);
     const { quizId } = req.params;
     const quiz = await QuizSchema.findById(quizId);
     if (quiz === null) {
@@ -151,13 +150,11 @@ export const getAllQuizes = async (req, res) => {
     }
 
     const quizDatas = teacher.createdQuiz;
-    console.log(quizDatas);
     return res.status(200).json({ quizes: quizDatas, successful: true });
   } catch (error) {
+    console.log("this is erro", error.message);
     return res.status(500).json({ message: error.message, successful: false });
   }
-
-  return res.status(200).json({ message: "testing successful" });
 };
 
 export const getAllQuestions = async (req, res) => {
@@ -182,6 +179,11 @@ export const editSingleQuestion = async (req, res) => {
 
   try {
     const quiz = await QuizSchema.findById(quizId);
+    if (quiz === null) {
+      return res
+        .status(404)
+        .json({ message: "No quiz found", successful: false });
+    }
 
     const removeQuestionIndex = quiz.questions.findIndex(
       (q) => q.id === newQuestion.questionId
@@ -199,14 +201,39 @@ export const editSingleQuestion = async (req, res) => {
       new: true,
     });
 
-    console.log(response);
-
-    return res
-      .status(200)
-      .json({ message: "try new thing for the first time" });
+    return res.status(200).json({
+      quiz,
+      message: "Questions Edited Successfully",
+      successful: true,
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message, successful: false });
   }
+};
 
-  return res.status(200).json("Testing successful");
+export const deleteSingleQuestion = async (req, res) => {
+  try {
+    const { quizId, questionId } = req.params;
+    const quiz = await QuizSchema.findById(quizId);
+    if (quiz === null) {
+      return res
+        .status(404)
+        .json({ message: "No quiz found", successful: false });
+    }
+
+    const removeQuestionIndex = quiz.questions.findIndex(
+      (q) => q.id === questionId
+    );
+
+    quiz.questions[removeQuestionIndex].remove();
+
+    quiz.save();
+    return res.status(200).json({
+      quiz,
+      message: "Questions Deleted Successfully",
+      successful: true,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
 };

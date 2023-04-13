@@ -87,19 +87,17 @@ export async function loginTeacher(req, res) {
       "test",
       { expiresIn: "5h" }
     );
-    return res
-      .cookie("access_token", token, {
-        httpOnly: true,
-        secure: true,
-      })
-      .status(200)
-      .json({
-        token,
-        id: result._id,
-        successful: true,
-        userType: "teacher",
-        name: result.fullName,
-      });
+    res.cookie("token", token, {
+      httpOnly: true,
+    });
+
+    return res.status(200).json({
+      token,
+      id: result._id,
+      successful: true,
+      userType: "teacher",
+      name: result.fullName,
+    });
   } catch (error) {
     return res
       .status(500)

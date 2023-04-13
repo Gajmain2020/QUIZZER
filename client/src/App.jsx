@@ -32,6 +32,7 @@ import AddQuestion from "./components/Teacher/Homepage/helper/AddQuestion";
 import ViewQuizes from "./components/Teacher/Homepage/helper/ViewQuizes";
 import EditQuiz from "./components/Teacher/Homepage/helper/EditQuiz";
 import ViewQuiz from "./components/Teacher/Homepage/helper/ViewQuiz";
+import Test from "./components/Test";
 
 function Component() {
   const navigate = useNavigate();
@@ -41,37 +42,37 @@ function Component() {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (localStorage.getItem("token") == null) {
-      setIsLoading(false);
-      setUser(null);
-      setIsLoggedIn(false);
-      // navigate("/not-authorized");
-    } else {
-      axios({
-        url: "http://localhost:5000/verify-jwt",
-        method: "post",
-        data: JSON.parse(localStorage.getItem("token")),
-      }).then((res) => {
-        if (res.data.verified === false) {
-          localStorage.clear();
-          setIsLoggedIn(false);
-          navigate("/not-authorized-user");
-        } else {
-          setUser(res.data);
-        }
-        setIsLoading(false);
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (localStorage.getItem("token") == null) {
+  //     setIsLoading(false);
+  //     setUser(null);
+  //     setIsLoggedIn(false);
+  //     // navigate("/not-authorized");
+  //   } else {
+  //     axios({
+  //       url: "http://localhost:5000/verify-jwt",
+  //       method: "post",
+  //       data: JSON.parse(localStorage.getItem("token")),
+  //     }).then((res) => {
+  //       if (res.data.verified === false) {
+  //         localStorage.clear();
+  //         setIsLoggedIn(false);
+  //         navigate("/not-authorized-user");
+  //       } else {
+  //         setUser(res.data);
+  //       }
+  //       setIsLoading(false);
+  //     });
+  //   }
+  // }, []);
 
-  if (isLoading) {
-    return (
-      <>
-        <CircularProgress />
-      </>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <>
+  //       <CircularProgress />
+  //     </>
+  //   );
+  // }
 
   return (
     <Container maxWidth="lg" className="mainContainer">
@@ -133,6 +134,7 @@ function Component() {
             <Route path="view-quiz/:quizName" exact element={<ViewQuiz />} />
             <Route path="edit-quiz/:quizName" exact element={<EditQuiz />} />
           </Route>
+          <Route path="/test" element={<Test />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/not-authorized-user" element={<NotAuthorized />} />
           <Route
