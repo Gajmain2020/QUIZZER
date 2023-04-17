@@ -69,7 +69,7 @@ export default function ViewAllStudents() {
 
   return (
     <>
-      <Navbar />
+      <Navbar userType={"teacher"} />
       <Container>
         {/* Search componenet */}
         <Box className="filter-components">

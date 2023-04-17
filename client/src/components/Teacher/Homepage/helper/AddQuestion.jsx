@@ -1,7 +1,9 @@
 import {
   Alert,
+  Backdrop,
   Button,
   CircularProgress,
+  Dialog,
   Paper,
   TextField,
 } from "@mui/material";
@@ -31,6 +33,8 @@ export default function AddQuestion() {
   const [disableSubmitButton, setDisableSubmitButton] = useState(true);
   const [questions, setQuestions] = useState([]);
   const [rearrangeQuestions, setRearrangeQuestions] = useState([]);
+  const [openBackdrop, setOpenBackdrop] = useState(false);
+  const [openSecondDialogBox, setOpenSecondDialogBox] = useState(false);
   const [individualQuestion, setIndividualQuestion] = useState({
     question: "",
     option1: "",
@@ -68,6 +72,7 @@ export default function AddQuestion() {
 
         setQuestions(res.data);
         setDisableSubmitButton(() => false);
+        setOpenSecondDialogBox(true);
       },
     });
   }
@@ -153,7 +158,8 @@ export default function AddQuestion() {
 
   return (
     <>
-      <Navbar />
+      <Navbar userType={"teacher"} />
+
       <Container className="add-question-container" sx={{ marginTop: "100px" }}>
         <Paper className="quiz-details-container" elevation={6}>
           <div className="home-btn">
@@ -172,14 +178,14 @@ export default function AddQuestion() {
             ) : (
               <>
                 <p>
-                  <u>Quiz Name</u> :: {quizData.quizName}
+                  <u>Quiz Name</u>: {quizData.quizName}
                 </p>
                 <p>
                   {" "}
-                  <u> Semster</u> :: {quizData.semester}
+                  <u> Semster</u>: {quizData.semester}
                 </p>
                 <p>
-                  <u>Creator Name</u> ::{" "}
+                  <u>Creator Name</u>:{" "}
                   {quizData.creator.creatorName.charAt(0).toUpperCase() +
                     quizData.creator.creatorName.slice(
                       1,
@@ -194,76 +200,119 @@ export default function AddQuestion() {
           <Button
             variant="contained"
             color="inherit"
-            onClick={() => setOption(() => 1)}
+            onClick={() => {
+              setOption(() => 1);
+              setOpenBackdrop(true);
+            }}
           >
             Add Question Via CSV
           </Button>
           <Button
             variant="contained"
             color="inherit"
-            onClick={() => setOption(() => 2)}
+            onClick={() => {
+              setOption(() => 2);
+              setOpenBackdrop(true);
+            }}
           >
             Add Question Individually
           </Button>
         </Paper>
         {option === 1 ? (
           <>
-            <Paper
-              elevation={6}
-              className="signup-form-container"
-              sx={{ backgroundColor: "#ccd9ff", margin: "0" }}
+            <Backdrop
+              className="flex"
+              sx={{ color: "#fff", zIndex: "1000" }}
+              open={openBackdrop}
             >
-              <form>
-                <div className="form-container">
-                  <div className="form-heading">
-                    Upload CSV File Of Questions
-                  </div>
-                  <div className="form-heading"></div>
-                  {errorMessage !== "" && (
-                    <Alert
-                      severity="error"
-                      onClose={() => {
-                        setErrorMessage("");
-                      }}
-                    >
-                      {errorMessage}
-                    </Alert>
-                  )}
-                  <label htmlFor="file">CSV File *</label>
-                  <Button variant="contained">
-                    <input
-                      className="form-item"
-                      type="file"
-                      id="file"
-                      onChange={handleFileUpload}
-                    />
-                  </Button>
-
+              <Paper
+                elevation={6}
+                // className="signup-form-container"
+                sx={{ margin: "0", padding: "20px 50px" }}
+              >
+                <div className="close-question-edit-form ">
                   <Button
-                    variant="contained"
-                    disabled={disableSubmitButton}
-                    onClick={handleSubmitCSV}
+                    fullWidth
+                    variant="outlined"
+                    color="error"
+                    onClick={() => setOpenBackdrop(false)}
                   >
-                    Submit CSV File
+                    Close
                   </Button>
-                  {successMessage !== "" && (
-                    <Alert
-                      severity="success"
-                      onClose={() => {
-                        setSuccessMessage("");
-                      }}
-                    >
-                      {successMessage}
-                    </Alert>
-                  )}
                 </div>
-              </form>
-            </Paper>
+
+                <form>
+                  <div className="form-container">
+                    <div className="form-heading">
+                      Upload CSV File Of Questions
+                    </div>
+                    <div className="form-heading"></div>
+                    {errorMessage !== "" && (
+                      <Alert
+                        severity="error"
+                        onClose={() => {
+                          setErrorMessage("");
+                        }}
+                      >
+                        {errorMessage}
+                      </Alert>
+                    )}
+                    <label htmlFor="file">CSV File *</label>
+                    <Button variant="contained">
+                      <input
+                        className="form-item"
+                        type="file"
+                        id="file"
+                        onChange={handleFileUpload}
+                      />
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      disabled={disableSubmitButton}
+                      onClick={handleSubmitCSV}
+                    >
+                      Submit CSV File
+                    </Button>
+                    {successMessage !== "" && (
+                      <Alert
+                        severity="success"
+                        onClose={() => {
+                          setSuccessMessage("");
+                        }}
+                      >
+                        {successMessage}
+                      </Alert>
+                    )}
+                  </div>
+                </form>
+              </Paper>
+            </Backdrop>
           </>
         ) : (
           option === 2 && (
-            <div className="model-element">
-              <Paper className="individual-question-container">
+            <Backdrop
+              className="flex"
+              maxWidth="xl"
+              sx={{ color: "#fff", zIndex: "1000" }}
+              open={openBackdrop}
+            >
+              <Paper
+                elevation={6}
+                // className="signup-form-container"
+                sx={{ margin: "0", padding: "20px 50px" }}
+              >
+                <div className="close-question-edit-form ">
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    color="error"
+                    size="small"
+                    onClick={() => setOpenBackdrop(false)}
+                  >
+                    Close
+                  </Button>
+                </div>
                 <p className="questions-heading">Add Individual Question</p>
                 {errorMessage !== "" && (
                   <Alert
@@ -284,6 +333,8 @@ export default function AddQuestion() {
                       sx={{ width: "100%" }}
                       label="Question *"
                       name="question"
+                      multiline
+                      rows={4}
                       onChange={handleChangeIndividualQuestion}
                     />
                   </div>
@@ -341,55 +392,76 @@ export default function AddQuestion() {
                   )}
                 </form>
               </Paper>
-            </div>
+            </Backdrop>
           )
         )}
 
         {rearrangeQuestions.length !== 0 && (
-          <Paper className="questions-container">
-            {errorMessage !== "" && (
-              <Alert
-                severity="error"
-                onClose={() => {
-                  setErrorMessage("");
+          <Dialog
+            maxWidth="xl"
+            className="hello"
+            open={openSecondDialogBox}
+            scroll="paper"
+          >
+            <div>
+              <Button
+                sx={{ position: "stickey", marginTop: "5px" }}
+                fullWidth
+                // size="small"
+                color="error"
+                variant="outlined"
+                onClick={() => {
+                  setOpenSecondDialogBox(() => false);
                 }}
               >
-                {errorMessage}
-              </Alert>
-            )}
-            <p className="questions-heading">
-              No of questions :: {rearrangeQuestions.length}
-            </p>
+                Close
+              </Button>
+            </div>
+            <Paper className="questions-container">
+              {errorMessage !== "" && (
+                <Alert
+                  severity="error"
+                  onClose={() => {
+                    setErrorMessage("");
+                  }}
+                >
+                  {errorMessage}
+                </Alert>
+              )}
+              <p className="questions-heading">
+                No of questions :: {rearrangeQuestions.length}
+              </p>
 
-            {rearrangeQuestions.length !== 0 &&
-              rearrangeQuestions.map((question, index) => {
-                return (
-                  <div key={index} className="question-container">
-                    <div className="question">
-                      {index + 1}
-                      {".   "}
-                      {question.question}
+              {rearrangeQuestions.length !== 0 &&
+                rearrangeQuestions.map((question, index) => {
+                  return (
+                    <div key={index} className="question-container">
+                      <div className="question">
+                        {index + 1}
+                        {".   "}
+                        {question.question}
+                      </div>
+                      <div className="options">
+                        <p>A. {question.options[0]} </p>
+                        <p>B. {question.options[1]} </p>
+                        <p>C. {question.options[2]} </p>
+                        <p>D. {question.options[3]} </p>
+                      </div>
+                      <div className="correct-option">
+                        Correct Option : {question.correctOption}
+                      </div>
                     </div>
-                    <div className="options">
-                      <p>A. {question.options[0]} </p>
-                      <p>B. {question.options[1]} </p>
-                      <p>C. {question.options[2]} </p>
-                      <p>D. {question.options[3]} </p>
-                    </div>
-                    <div className="correct-option">
-                      Correct Option : {question.correctOption}
-                    </div>
-                  </div>
-                );
-              })}
-            <Button
-              color="success"
-              variant="contained"
-              onClick={handleAddQuestionViaCSV}
-            >
-              Add Questions
-            </Button>
-          </Paper>
+                  );
+                })}
+              <Button
+                color="success"
+                variant="contained"
+                onClick={handleAddQuestionViaCSV}
+              >
+                Add Questions
+              </Button>
+            </Paper>
+          </Dialog>
         )}
       </Container>
     </>

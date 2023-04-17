@@ -79,11 +79,7 @@ export default function Helper_3_4({ prop }) {
 
   return (
     <>
-      <Paper
-        elevation={6}
-        className="signup-form-container"
-        sx={{ backgroundColor: "#E5D1FA" }}
-      >
+      <Paper elevation={6} className="backdrop-form">
         <form>
           <div className="form-container">
             <div className="form-heading">

@@ -35,7 +35,8 @@ function TeacherDashboard() {
   return (
     <>
       <div className="dashboard">
-        <Navbar />
+        <Navbar userType={"teacher"} />
+
         <button onClick={handleUpdateClick}>Update Profile</button>
         <button onClick={handleHomepageClick}>Homepage</button>
 

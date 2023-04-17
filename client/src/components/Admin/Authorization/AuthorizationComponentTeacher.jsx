@@ -17,6 +17,7 @@ import {
   rejectTeacher,
 } from "../../../service/admin";
 import AdminHelperNavbar from "../AdminHelperNavbar";
+import noTask from "../../../images/no-task.png";
 
 export default function AuthorizationComponent() {
   const [teachers, setTeachers] = useState([]);
@@ -24,6 +25,7 @@ export default function AuthorizationComponent() {
   const [processing, setProcessing] = useState(false);
   const [successful, setSuccessful] = useState(false);
   const [error, setError] = useState("");
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     if (id !== null) {
@@ -31,6 +33,7 @@ export default function AuthorizationComponent() {
         .then((res) => {
           return getUnauthorizedTeacher(res.details.department).then((res) => {
             setTeachers(res.teachers);
+            setLoaded(true);
           });
         })
         .catch((err) => {
@@ -73,11 +76,16 @@ export default function AuthorizationComponent() {
       <AdminHelperNavbar />
       <Container className="table">
         <div className="table-heading">
-          <h1>Teacher Authentication Request</h1>
+          <h1>Teachers Authentication Request</h1>
         </div>
         <div>
-          {teachers.length === 0 ? (
-            <>zero size Table</>
+          {loaded && teachers.length === 0 ? (
+            <>
+              <div className="empty-prompt">
+                <img src={noTask} invert alt="" />
+                No request for approval for the time being !!!
+              </div>
+            </>
           ) : (
             <div>
               <Table

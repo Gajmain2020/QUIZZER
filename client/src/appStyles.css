@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Fira+Code:wght@300;500;600&family=Labrada:ital,wght@0,100;0,200;0,400;1,200&family=Montserrat&family=Ubuntu&family=Zeyada&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Fira+Code:wght@300;500;600&family=Labrada:ital,wght@0,100;0,200;0,400;1,200&family=Lato:ital@0;1&family=Montserrat&family=Open+Sans:ital,wght@0,400;0,500;1,400&family=Roboto:ital,wght@0,400;0,500;1,400&family=Source+Sans+Pro:ital,wght@0,400;1,400;1,600&family=Ubuntu&family=Zeyada&display=swap");
 
 * {
   margin: 0;
@@ -116,6 +116,7 @@
 
 .response-table {
   display: flex;
+  flex-direction: column;
   gap: 80px;
   margin: 20px;
   padding: 20px;
@@ -231,7 +232,8 @@
 }
 
 .profile-container {
-  border: solid 1px rgb(37, 18, 18);
+  border: solid 2px rgb(83, 75, 75);
+  border-radius: 10px;
   padding: 10px 5px;
   margin: 10px 0px;
 }
@@ -262,7 +264,7 @@
 }
 
 .quiz-details-container {
-  background-color: #ccd9ff !important;
+  background-color: rgb(223, 223, 223) !important;
   display: flex;
   flex-direction: column !important;
   width: 80%;
@@ -287,7 +289,7 @@
 }
 
 .question-addition-option {
-  background-color: #ccd9ff !important;
+  background-color: rgb(223, 223, 223) !important;
   display: flex;
   flex-direction: row;
   min-width: 200px !important;
@@ -299,16 +301,16 @@
 }
 
 .questions-container {
-  margin: 0 auto 100px auto;
+  margin: 0 auto 20px auto;
   padding: 10px 25px;
-  background-color: #ccd9ff !important;
+  background-color: #dcdcdc !important;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 10px;
-  font-size: 1.1em;
+  font-size: 0.9em;
   font-family: "ubuntu", sans-serif;
-  width: 75%;
+  width: 90%;
 }
 
 .question-container {
@@ -437,19 +439,225 @@
   padding: 10px 5px;
 }
 
-.test .option-list {
+.student-option-btns {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 50px;
+}
+.student-option-btns Button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 400px;
+  font-size: 20px;
+}
+.student-option-btns Button img {
+  width: 80px;
+}
+
+.confirmation-backdrop {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.confirmation-backdrop Button {
+  margin-bottom: 20px;
+}
+
+.confirmation-backdrop .confirmation-dialog-box {
+  max-width: 500px;
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.confirmation-backdrop .confirmation-dialog-box img {
+  max-width: 100px;
+  padding: 10px 20px;
+}
+.confirmation-backdrop .confirmation-dialog-box .quiz-details {
+  margin-top: 20px;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-size: 1em;
   list-style: none;
-  text-transform: uppercase;
-  /* border: solid 1px red; */
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-height: 50px;
 }
-.test .option-list .option {
-  border: solid 1px;
-  padding: 10px 10px;
+
+.confirmation-backdrop .confirmation-dialog-box .attempt-btns {
+  display: flex;
+  width: 100%;
+  margin: 10px 20px;
+  justify-content: space-around !important;
+  align-items: center;
+}
+.confirmation-backdrop
+  .confirmation-dialog-box
+  .attempt-btns
+  Button:first-child {
+  max-height: 35px;
+  display: flex;
+  max-width: 150px;
+}
+.confirmation-backdrop .confirmation-dialog-box .attempt-btns Button {
+  display: flex;
+  width: 60%;
+  margin: 10px 20px;
+  justify-content: space-around;
+}
+
+.attempt-quiz-container {
+  margin-top: 40px;
+}
+.attempt-quiz-container .end-button {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 30px;
+}
+.attempt-quiz-container .quiz-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  max-width: 900px;
+  justify-content: center;
+  align-items: center;
+  margin: 10px auto;
+}
+
+.questions-container {
+  outline: solid 1px red;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.questions-container .option-list {
+  display: flex;
+  list-style: none;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+.questions-container .option-list .option {
   cursor: pointer;
+  background-color: rgb(196, 196, 196);
+  min-width: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50px;
+  border-radius: 10px;
+  margin: 15px 0;
 }
-.test .option-list .option.selected {
-  background-color: rgb(186, 186, 186);
-  color: black;
+.questions-container .option-list .option.selected {
+  /* min-width: 200px; */
+  background-color: #3dba34;
+  min-height: 50px;
+}
+.test-complete-dialog-box {
+  padding: 15px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  max-width: 400px;
+  font-family: "Lato", sans-serif;
+}
+.test-complete-dialog-box .dialog-box-message span {
+  display: flex;
+}
+
+.test-complete-dialog-box .success-gif {
+  max-width: 100px;
+}
+
+.heading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 60px;
+  font-family: "Lato", sans-serif;
+  margin: 20px 0;
+
+  border-bottom: solid 3px rgb(208, 208, 208);
+}
+
+.table-row td {
+  height: 20px;
+}
+
+.table-row:hover td {
+  background-color: rgb(187, 193, 255);
+  transition: all 0.2s ease-in-out;
+}
+
+.csv-table-dialog {
+  outline: solid 5px red;
+}
+
+.homepage-container {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: safe;
+}
+.homepage-container .heading {
+  font-family: "lato";
+  font-weight: 600;
+  font-size: 50px;
+  border-bottom: solid 3px rgb(115, 115, 115);
+}
+
+.homepage-container .admin-options-btn {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 16px;
+}
+.homepage-container .admin-options-btn Button {
+  min-width: 400px;
+}
+
+.empty-prompt {
+  font-family: "ubuntu";
+  font-size: 25px;
+  margin: 20px auto;
+}
+.table .empty-prompt {
+  font-family: "ubuntu";
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.table .empty-prompt img {
+  width: 200px;
+  filter: invert(100%);
+  transform: rotateZ(18deg);
+}
+
+tbody tr:hover {
+  background-color: rgb(187, 193, 255);
+  transition: all 0.2s ease-in-out;
+}
+
+.flex {
+  display: flex;
+  flex-direction: column;
+}
+
+.close-question-edit-form {
+  margin-bottom: 10px;
 }

@@ -36,7 +36,7 @@ export default function Dashboard() {
   return (
     <>
       <div className="dashboard">
-        <Navbar />
+        <Navbar userType={"student"} />
         <button className="update-btn" onClick={handleUpdateClick}>
           Update Profile
         </button>

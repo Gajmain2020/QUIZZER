@@ -56,7 +56,6 @@ const Homepage = () => {
             </Button>
           </div>
         </Grid>
-        <Footer />
       </Grid>
     </>
   );

@@ -1,5 +1,14 @@
 import axios from "axios";
 
+const URL = "http://localhost:5000/";
+
+const headers = {
+  "Content-Type": "application/json",
+  authorization: JSON.parse(localStorage?.getItem("token"))?.token
+    ? `Bearer ${JSON.parse(localStorage?.getItem("token"))?.token}`
+    : "",
+};
+
 export async function signupStudent(data) {
   try {
     const response = await axios({
@@ -56,6 +65,19 @@ export async function getStudentByFilter(query, department) {
       method: "GET",
     });
     // console.log(response);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function getAllQuizesStudent(studentId) {
+  try {
+    const response = await axios({
+      url: URL + `quiz/get-quizes-student/${studentId}`,
+      method: "GET",
+      headers: headers,
+    });
     return response.data;
   } catch (error) {
     return error.response.data;

@@ -17,6 +17,7 @@ import {
   rejectStudent,
 } from "../../../service/admin";
 import AdminHelperNavbar from "../AdminHelperNavbar";
+import noTask from "../../../images/no-task.png";
 
 export default function AuthorizationComponent() {
   const [students, setStudents] = useState([]);
@@ -24,6 +25,7 @@ export default function AuthorizationComponent() {
   const [processing, setProcessing] = useState(false);
   const [successful, setSuccessful] = useState(false);
   const [error, setError] = useState("");
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     if (id !== null) {
@@ -31,10 +33,11 @@ export default function AuthorizationComponent() {
         .then((res) => {
           return getUnauthorizedStudent(res.details.department).then((res) => {
             setStudents(res.students);
+            setLoaded(true);
           });
         })
         .catch((err) => {
-          setError(err.message);
+          alert(err.message);
         });
     }
   }, [successful, id]);
@@ -48,7 +51,7 @@ export default function AuthorizationComponent() {
         setProcessing(false);
       })
       .catch((error) => {
-        setError(error.message);
+        alert(error.message);
         setProcessing(false);
       });
   }
@@ -61,7 +64,7 @@ export default function AuthorizationComponent() {
         setProcessing(false);
       })
       .catch((err) => {
-        setError(err.message);
+        alert(err.message);
         setProcessing(false);
       });
   }
@@ -74,8 +77,13 @@ export default function AuthorizationComponent() {
           <h1>Student Authentication Request</h1>
         </div>
         <div>
-          {students.length === 0 ? (
-            <>zero size Table</>
+          {loaded && students.length === 0 ? (
+            <>
+              <div className="empty-prompt">
+                <img src={noTask} invert alt="" />
+                No request for approval for the time being !!!
+              </div>
+            </>
           ) : (
             <div>
               <Table

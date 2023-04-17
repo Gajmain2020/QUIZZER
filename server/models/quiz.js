@@ -6,7 +6,12 @@ const quizSchema = mongoose.Schema({
   department: String,
   creator: { creatorName: String, creatorId: String },
   attemptedStudents: [
-    { studentName: String, studentId: String, semester: String },
+    {
+      studentId: String,
+      studentName: String,
+      semester: String,
+      securedScore: Number,
+    },
   ],
   questions: [
     {

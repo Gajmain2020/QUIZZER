@@ -38,7 +38,7 @@ export default function ViewQuiz() {
 
   return (
     <>
-      <Navbar />
+      <Navbar userType={"teacher"} />
       <Container className="add-question-container" sx={{ marginTop: "100px" }}>
         <Paper className="quiz-details-container" elevation={6}>
           <div className="home-btn">

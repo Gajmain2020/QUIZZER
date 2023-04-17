@@ -59,6 +59,9 @@ export default function EditQuiz() {
   useEffect(() => {
     getAllQuestions(quizName)
       .then((res) => {
+        if (res.accessGrant === false) {
+          navigate("/not-authorized-user");
+        }
         setQuiz(res.quiz);
         setLoading(false);
       })
@@ -168,7 +171,7 @@ export default function EditQuiz() {
 
   return (
     <>
-      <Navbar />
+      <Navbar userType={"teacher"} />
       <Container className="add-question-container" sx={{ marginTop: "100px" }}>
         <Paper className="quiz-details-container" elevation={6}>
           <div className="home-btn">
@@ -354,7 +357,6 @@ export default function EditQuiz() {
           open={successMessage !== ""}
           autoHideDuration={2000}
           message={successMessage}
-          color="success"
         />
       )}
     </>

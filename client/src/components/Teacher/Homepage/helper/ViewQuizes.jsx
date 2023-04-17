@@ -12,12 +12,14 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  Snackbar,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useLocation, useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
-import { getAllQuizes } from "../../../../service/quiz";
+import { deleteQuiz, getAllQuizes } from "../../../../service/quiz";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 export default function ViewQuizes() {
   const navigate = useNavigate();
@@ -28,20 +30,24 @@ export default function ViewQuizes() {
   const [quizName, setQuizName] = useState("");
   const id = locn.pathname.split("/")[2]; //* getting id from the url without any delay..
   const [quizes, setQuizes] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+  const [openSuccessMessage, setOpenSuccessMessage] = useState(true);
+  const [successMessage, setSuccessMessage] = useState("");
+
+  setTimeout(() => {
+    setSuccessMessage("");
+  }, 2000);
 
   useEffect(() => {
     // ! need to find all the quizes for specific teacher id
     getAllQuizes(id)
       .then((res) => {
-        if (res.accessGrant === false) {
-          navigate("/not-authorized-user");
-        }
-
         setQuizes(() => res.quizes);
       })
       .catch((err) => setErrorMessage(err.message));
     setLoading(false);
-  }, [id]);
+    return;
+  }, [id, refresh, navigate]);
 
   function handleApplyFilterClick() {
     console.log("semster:", semester);
@@ -51,10 +57,20 @@ export default function ViewQuizes() {
   function handleEditClick(id) {
     navigate(`/quiz/edit-quiz/${id}`);
   }
+  function handleDeleteClick(quizName) {
+    deleteQuiz(quizName)
+      .then((res) => {
+        setSuccessMessage(res.message);
+      })
+      .catch((err) => setErrorMessage(err.message));
+
+    setRefresh((prev) => !prev);
+    setOpenSuccessMessage(true);
+  }
 
   return (
     <>
-      <Navbar />
+      <Navbar userType={"teacher"} />
       <Container>
         <Box className="filter-components">
           <div className="home-btn">
@@ -102,13 +118,14 @@ export default function ViewQuizes() {
             <Table size="small">
               <TableHead sx={{ backgroundColor: "gray" }}>
                 <TableRow>
-                  <TableCell>S. No.</TableCell>
-                  <TableCell>Quiz Name</TableCell>
-                  <TableCell>Semester</TableCell>
-                  <TableCell>Edit Or View</TableCell>
+                  <TableCell sx={{ fontWeight: "600" }}>S. No.</TableCell>
+                  <TableCell sx={{ fontWeight: "600" }}>Quiz Name</TableCell>
+                  <TableCell sx={{ fontWeight: "600" }}>Semester</TableCell>
+                  <TableCell sx={{ fontWeight: "600" }}>Edit Or View</TableCell>
+                  <TableCell sx={{ fontWeight: "600" }}>Delete Quiz</TableCell>
                 </TableRow>
               </TableHead>
-              {quizes !== null && (
+              {!loading && (
                 <TableBody sx={{ backgroundColor: "#d4e4ff" }}>
                   {quizes.map((quiz, idx) => printRow(quiz, idx))}
                 </TableBody>
@@ -116,6 +133,18 @@ export default function ViewQuizes() {
             </Table>
           )}
         </Box>
+        {successMessage !== "" && (
+          <Snackbar open={successMessage !== ""} autoHideDuration={2000}>
+            <Alert
+              severity="success"
+              onClose={() => {
+                setSuccessMessage("");
+              }}
+            >
+              {successMessage}
+            </Alert>
+          </Snackbar>
+        )}
       </Container>
     </>
   );
@@ -142,6 +171,16 @@ export default function ViewQuizes() {
             <EditIcon fontSize="small" />
             &nbsp; &nbsp; OR &nbsp; &nbsp;
             <VisibilityIcon />
+          </Button>
+        </TableCell>
+        <TableCell sx={{ border: "solid 1px black", borderStyle: "dotted" }}>
+          <Button
+            size="small"
+            variant="contained"
+            color="error"
+            onClick={() => handleDeleteClick(quiz.quizName)}
+          >
+            <DeleteForeverIcon fontSize="small" />
           </Button>
         </TableCell>
       </TableRow>

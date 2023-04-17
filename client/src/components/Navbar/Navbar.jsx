@@ -6,7 +6,7 @@ import CustomMenu from "./CustomMenu";
 
 import "./navbarStyles.css";
 
-const Navbar = () => {
+const Navbar = ({ userType }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("token")));
   var userId = null;
@@ -41,13 +41,31 @@ const Navbar = () => {
     },
   ];
 
+  function handleLogoClick() {
+    if (userType === "admin") {
+      navigate(`/admin/homepage/${user.id}`);
+    }
+    if (userType === "teacher") {
+      navigate(`/teacher/homepage/${user.id}`);
+    }
+    if (userType === "student") {
+      navigate(`/student/homepage/${user.id}`);
+    } else {
+      navigate("/");
+    }
+  }
+
   return (
     <div>
       <AppBar className="navbar">
         <Toolbar sx={{ backgroundColor: "#393e46" }}>
-          <Link to="/" className="home-button">
+          <Button
+            onClick={handleLogoClick}
+            size="small"
+            className="home-button"
+          >
             <img src={appLogo} width="120" alt="LOGO" className="home-logo" />
-          </Link>
+          </Button>
           <div className="toolbar">
             <div className="navigation">
               <ul>
@@ -86,15 +104,22 @@ const Navbar = () => {
             <div className="user-navigation">
               {user !== null ? (
                 <div className="logged-in-navigation">
-                  <Avatar alt="user?.result.name">Hello</Avatar>
-                  <Button sx={{ color: "white" }} onClick={handleClickProfile}>
-                    <Typography variant="h6">{user.userType}</Typography>
+                  <Button
+                    sx={{ color: "white", display: "flex", gap: "20px" }}
+                    onClick={handleClickProfile}
+                  >
+                    <Avatar alt="user?.result.name">
+                      {user.name.charAt(0).toUpperCase()}
+                    </Avatar>
+                    <Typography variant="h6">{user.name}</Typography>
                   </Button>
 
                   <Button
                     variant="contained"
                     className="logout"
                     color="secondary"
+                    size="small"
+                    sx={{ height: "40px" }}
                     onClick={handleLogout}
                   >
                     Logout

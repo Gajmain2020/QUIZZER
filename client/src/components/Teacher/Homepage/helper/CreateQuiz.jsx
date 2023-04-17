@@ -50,7 +50,7 @@ export default function CreateQuiz() {
 
   return (
     <>
-      <Navbar />
+      <Navbar userType={"teacher"} />
       <Container>
         <Paper elevation={6} className="create-quiz-container">
           <div className="form-heading" style={{ marginBottom: "0.5em" }}>

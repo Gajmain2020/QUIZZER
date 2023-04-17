@@ -15,9 +15,10 @@ const studentSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  attemptedTest: [
+  attemptedQuiz: [
     {
-      type: String,
+      quizId: String,
+      quizName: String,
       securedScore: Number,
       totalScore: Number,
     },

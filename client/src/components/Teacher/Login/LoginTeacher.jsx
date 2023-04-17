@@ -55,7 +55,7 @@ export default function LoginTeacher() {
 
   return (
     <>
-      <Navbar />
+      <Navbar userType={"teacher"} />
 
       <Paper
         elevation={6}

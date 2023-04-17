@@ -237,3 +237,203 @@ export const deleteSingleQuestion = async (req, res) => {
     return res.status(500).json({ message: error.message, successful: false });
   }
 };
+
+export const deleteQuiz = async (req, res) => {
+  try {
+    const { quizName } = req.params;
+    const quiz = await QuizSchema.findOne({ quizName });
+
+    const creator = await TeacherSchema.findById(quiz.creator.creatorId);
+
+    //* deleting the quiz from teacher instance
+    const removeQuizIndex = creator.createdQuiz.findIndex(
+      (q) => q.quizName === quizName
+    );
+    creator.createdQuiz[removeQuizIndex].remove();
+    creator.save();
+
+    //* Deleting the quiz from Quiz Collection
+    await QuizSchema.findOneAndDelete({ quizName });
+
+    return res
+      .status(200)
+      .json({ message: "Quiz deleted successfully", successful: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+
+export const getAllQuizForStudent = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    const student = await StudentSchema.findById(studentId);
+
+    if (!student) {
+      return res
+        .status(404)
+        .json({ message: "Student not found", successful: false });
+    }
+
+    const quizes = await QuizSchema.find({
+      department: student.department,
+      semester: student.semester,
+    });
+
+    let sendQuizes = [];
+    for (let i = 0; i < quizes.length; i++) {
+      let pass = quizes[i].attemptedStudents.findIndex(
+        (student) => student.studentId === studentId
+      );
+      sendQuizes.push({
+        _id: quizes[i]._id,
+        quizName: quizes[i].quizName,
+        numberOfQuestions: quizes[i].questions.length,
+        attemptable: pass === -1 ? true : false,
+      });
+    }
+    // console.log(sendQuizes);
+
+    return res.status(200).json({
+      message: "Quizes successfully found",
+      successful: true,
+      quizes: sendQuizes,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+
+export const attemptQuiz = async (req, res) => {
+  try {
+    const { quizName } = req.params;
+
+    const { authorization } = req.headers;
+    const token = authorization.split(" ")[1];
+    const studentData = JSON.parse(
+      Buffer.from(token.split(".")[1], "base64").toString()
+    );
+
+    if (studentData.userType !== "student") {
+      return res.status(401).json({
+        message: "You ar not authorized to attempt test.",
+        successful: false,
+      });
+    }
+
+    const quiz = await QuizSchema.findOne({ quizName });
+    const student = await StudentSchema.findById(studentData.id);
+
+    student.attemptedQuiz.push({
+      quizId: quiz._id,
+      quizName: quiz.quizName,
+      securedScore: 0,
+      totalScore: quiz.questions.length,
+    });
+    quiz.attemptedStudents.push({
+      studentId: student._id,
+      studentName: student.fullName,
+      semester: student.semester,
+      securedScore: 0,
+    });
+
+    student.save();
+    quiz.save();
+
+    const questions = quiz.questions.map((ques) => {
+      return {
+        questionId: ques._id,
+        question: ques.question,
+        options: ques.options,
+      };
+    });
+
+    let sendData = {
+      quizName: quiz.quizName,
+      numberOfQuestions: quiz.questions.length,
+      questions,
+    };
+
+    return res.status(200).json({ quizData: sendData, successful: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+
+export const submitQuiz = async (req, res) => {
+  try {
+    const { quizName } = req.params;
+    const { submittedOptions } = req.body;
+    const { authorization } = req.headers;
+    const token = authorization.split(" ")[1];
+    const studentData = JSON.parse(
+      Buffer.from(token.split(".")[1], "base64").toString()
+    );
+
+    const quiz = await QuizSchema.findOne({ quizName });
+    //! getting question from quiz and calculating score
+    const { questions } = quiz;
+
+    var score = 0;
+
+    for (let i = 0; i < questions.length; i++) {
+      const options = questions[i].options;
+      if (options.indexOf(questions[i].correctOption) === submittedOptions[i]) {
+        score = score + 1;
+      }
+    }
+    const student = await StudentSchema.findById(studentData.id);
+    const studentIndex = student.attemptedQuiz.findIndex(
+      (quiz) => quiz.quizName === quizName
+    );
+    const quizIndex = quiz.attemptedStudents.findIndex(
+      (student) => student.studentId === studentData.id
+    );
+
+    console.log("1st", quizIndex);
+
+    quiz.attemptedStudents.splice(studentIndex, 1);
+    student.attemptedQuiz.splice(quizIndex, 1);
+    console.log("2nd", student.attemptQuiz);
+
+    quiz.attemptedStudents.push({
+      quizId: quiz._id,
+      quizName: quiz.quizName,
+      securedScore: score,
+      totalScore: quiz.questions.length,
+    });
+
+    student.attemptedQuiz[studentIndex] = {
+      quizId: quiz._id,
+      quizName: quiz.quizName,
+      securedScore: score,
+      totalScore: quiz.questions.length,
+    };
+
+    quiz.save();
+    student.save();
+    console.log("3rd", student.attemptQuiz);
+
+    return res.status(200).json({
+      quiz,
+      student,
+      score,
+      message: "done hai bhai",
+      successful: true,
+    });
+  } catch (error) {
+    console.log("yaha hu bhai");
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};
+
+export const viewAttemptedQuiz = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    const student = await StudentSchema.findById(studentId);
+    return res
+      .status(200)
+      .json({ attemptedQuiz: student.attemptedQuiz, successful: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, successful: false });
+  }
+};

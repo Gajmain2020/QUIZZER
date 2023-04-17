@@ -70,7 +70,7 @@ export default function ViewReport() {
 
   return (
     <>
-      <Navbar />
+      <Navbar userType={"teacher"} />
       <Container>
         {/* Search componenet */}
         <Box className="filter-components">
@@ -78,7 +78,7 @@ export default function ViewReport() {
             <Button
               variant="contained"
               color="warning"
-              onClick={() => navigate(`/teacher/homepage/{id}`)}
+              onClick={() => navigate(`/teacher/homepage/${id}`)}
             >
               <HomeIcon />
             </Button>

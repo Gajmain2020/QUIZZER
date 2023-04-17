@@ -67,6 +67,7 @@
   width: 400px;
   display: flex;
   justify-content: space-evenly;
+  align-items: center;
 }
 
 .nav-button {
@@ -85,13 +86,6 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
-}
-
-.admin-options-btn {
-  /* border: solid 10px red; */
-  margin: 16px 0;
-  display: flex;
-  gap: 16px;
 }
 
 .popup-form {

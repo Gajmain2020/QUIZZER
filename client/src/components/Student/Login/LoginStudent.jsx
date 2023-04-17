@@ -55,7 +55,8 @@ export default function LoginStudent() {
 
   return (
     <>
-      <Navbar />
+      <Navbar userType={"student"} />
+
       <Paper
         elevation={6}
         className="signup-form-container"

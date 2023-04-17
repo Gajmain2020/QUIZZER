@@ -121,14 +121,10 @@ export default function Helper({ prop }) {
 
   return (
     <>
-      <Paper
-        elevation={6}
-        className="signup-form-container"
-        sx={{ backgroundColor: "#E5D1FA" }}
-      >
+      <Paper elevation={6} className="backdrop-form">
         <form>
           <div className="form-container">
-            <div className="form-heading animate__animated animate__bounce">
+            <div className="form-heading ">
               Add {prop === 1 ? "Individual Teacher" : "Individual Student"}
             </div>
             {errorMessage !== "" && (

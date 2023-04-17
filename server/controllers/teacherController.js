@@ -30,30 +30,14 @@ export const signupTeacher = async (req, res) => {
       confirmPassword: hashPassword,
       department,
     });
-    const token = jwt.sign(
-      {
-        userType: "teacher",
-        id: result._id,
-        name: fullName,
-      },
-      "test",
-      {
-        expiresIn: "5h",
-      }
-    );
-    return res
-      .cookie("access_token", token, {
-        httpOnly: true,
-        secure: true,
-      })
-      .status(200)
-      .json({
-        token,
-        id: result._id,
-        userType: "teacher",
-        name: fullName,
-        successful: true,
-      });
+
+    return res.status(200).json({
+      token,
+      id: result._id,
+      userType: "teacher",
+      name: fullName,
+      successful: true,
+    });
   } catch (error) {
     return res
       .status(500)
@@ -84,7 +68,7 @@ export async function loginTeacher(req, res) {
         id: result._id,
         name: result.fullName,
       },
-      "test",
+      "teacherKey",
       { expiresIn: "5h" }
     );
     res.cookie("token", token, {

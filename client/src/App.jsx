@@ -33,47 +33,11 @@ import ViewQuizes from "./components/Teacher/Homepage/helper/ViewQuizes";
 import EditQuiz from "./components/Teacher/Homepage/helper/EditQuiz";
 import ViewQuiz from "./components/Teacher/Homepage/helper/ViewQuiz";
 import Test from "./components/Test";
+import ViewQuizesStudent from "./components/Student/Homepage/Helper/ViewQuizesStudent";
+import AttemptQuiz from "./components/Student/Homepage/Helper/AttemptQuiz";
+import ViewReportStudent from "./components/Student/Homepage/Helper/ViewReportStudent";
 
 function Component() {
-  const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const [user, setUser] = useState(null);
-
-  const [isLoading, setIsLoading] = useState(true);
-
-  // useEffect(() => {
-  //   if (localStorage.getItem("token") == null) {
-  //     setIsLoading(false);
-  //     setUser(null);
-  //     setIsLoggedIn(false);
-  //     // navigate("/not-authorized");
-  //   } else {
-  //     axios({
-  //       url: "http://localhost:5000/verify-jwt",
-  //       method: "post",
-  //       data: JSON.parse(localStorage.getItem("token")),
-  //     }).then((res) => {
-  //       if (res.data.verified === false) {
-  //         localStorage.clear();
-  //         setIsLoggedIn(false);
-  //         navigate("/not-authorized-user");
-  //       } else {
-  //         setUser(res.data);
-  //       }
-  //       setIsLoading(false);
-  //     });
-  //   }
-  // }, []);
-
-  // if (isLoading) {
-  //   return (
-  //     <>
-  //       <CircularProgress />
-  //     </>
-  //   );
-  // }
-
   return (
     <Container maxWidth="lg" className="mainContainer">
       {/* <Navbar /> */}
@@ -105,6 +69,14 @@ function Component() {
           <Route path="/student">
             <Route path="dashboard/:id" exact element={<StudentDashboard />} />
             <Route path="homepage/:id" exact element={<StudentHomepage />} />
+            <Route path=":id">
+              <Route
+                path="attempt-quiz"
+                exact
+                element={<ViewQuizesStudent />}
+              />
+              <Route path="view-report" exact element={<ViewReportStudent />} />
+            </Route>
           </Route>
           <Route path="/teacher">
             <Route path="dashboard/:id" exact element={<TeacherDashboard />} />
@@ -126,6 +98,11 @@ function Component() {
             />
           </Route>
           <Route path="quiz">
+            <Route
+              path="attempt-quiz/:quizName"
+              exact
+              element={<AttemptQuiz />}
+            />
             <Route
               path=":quizName/add-question"
               exact

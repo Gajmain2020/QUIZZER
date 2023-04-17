@@ -39,31 +39,14 @@ export async function signupStudent(req, res) {
       section,
       department,
     });
-    const token = jwt.sign(
-      {
-        userType: "student",
-        id: result._id,
-        name: fullName,
-      },
-      "test",
-      {
-        expiresIn: "5h",
-      }
-    );
 
-    return res
-      .cookie("access_token", token, {
-        httpOnly: true,
-        secure: true,
-      })
-      .status(200)
-      .json({
-        token,
-        id: result._id,
-        userType: "student",
-        name: fullName,
-        successful: true,
-      });
+    return res.status(200).json({
+      token,
+      id: result._id,
+      userType: "student",
+      name: fullName,
+      successful: true,
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message, successful: false });
   }
@@ -92,11 +75,11 @@ export async function loginStudent(req, res) {
         id: result._id,
         name: result.fullName,
       },
-      "test",
+      "studentKey",
       { expiresIn: "5h" }
     );
     return res
-      .cookie("access_token", token, {
+      .cookie("token", token, {
         httpOnly: true,
         secure: true,
       })

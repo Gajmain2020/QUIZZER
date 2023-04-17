@@ -1,37 +1,35 @@
 import { useNavigate } from "react-router-dom";
-import Footer from "../../Footer/Footer";
 import Navbar from "../../Navbar/Navbar";
+import { Button, Container } from "@mui/material";
+import reportPNG from "../../../images/analysis.png";
+import testPNG from "../../../images/exam.png";
 
 export default function Homepage() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("token"));
 
-  function handleResultClick() {
-    alert("result button cliked");
+  function handleViewReportClick() {
+    navigate(`/student/${user.id}/view-report`);
   }
-  function handleTestClick() {
-    alert("test button cliked");
-  }
-  function handleDashboardClick() {
-    alert("dashboard button cliked");
-    navigate(`/student/dashboard/${user.id}`);
+  function handleAttemptQuizClick() {
+    navigate(`/student/${user.id}/attempt-quiz`);
   }
 
   return (
     <>
-      <Navbar />
-      <div className="homepage-button-container">
-        {/* sajawat hona hai isme abhi */}
-        <div>No. Of test attempted :: </div>
-        <div>No. Of test Unattempted:: </div>
-        <div>No. Of total test :: </div>
-        {/* sajawat hona hai isme abhi */}
-        <button onClick={handleDashboardClick}>Dashboard</button>
-        <button onClick={handleTestClick}>Tests</button>
-        <button onClick={handleResultClick}>Results</button>
-
-        <Footer />
-      </div>
+      <Navbar userType={"student"} />
+      <Container>
+        <div className="student-option-btns">
+          <Button variant="contained" onClick={handleAttemptQuizClick}>
+            <img src={testPNG} alt="Test Icon" />
+            Attempt Quiz
+          </Button>
+          <Button variant="contained" onClick={handleViewReportClick}>
+            <img src={reportPNG} alt="REPORT ICON" />
+            View Result
+          </Button>
+        </div>
+      </Container>
     </>
   );
 }
